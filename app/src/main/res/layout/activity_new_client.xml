@@ -1,97 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     tools:context=".ui.client.NewClientActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:src="@drawable/ic_client"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            />
-
-        <EditText
-            android:hint="Nome"
+        android:paddingBottom="40dp"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="20dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"/>
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_vertical">
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    android:src="@drawable/ic_client"
+                    style="@style/CustomImageView.Form"
+                    />
+                <EditText
+                    android:hint="@string/hint_nome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"/>
+            </LinearLayout>
 
-        <ImageView
-            android:src="@drawable/ic_phone"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            />
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    style="@style/CustomImageView.Form"
+                    />
 
-        <EditText
-            android:hint="Telefone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"/>
-    </LinearLayout>
+                <EditText
+                    android:hint="CPF ou CNPJ"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_vertical">
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    android:src="@drawable/ic_phone"
+                    style="@style/CustomImageView.Form"
+                    />
 
-        <ImageView
-            android:src="@drawable/ic_location"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            />
+                <EditText
+                    android:hint="Telefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"/>
+            </LinearLayout>
 
-        <EditText
-            android:hint="Rua"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"/>
-    </LinearLayout>
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    android:src="@drawable/ic_email"
+                    style="@style/CustomImageView.Form"
+                    />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_vertical">
+                <EditText
+                    android:hint="E-mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"/>
+            </LinearLayout>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            />
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    android:src="@drawable/ic_location"
+                    style="@style/CustomImageView.Form"
+                    />
 
-        <EditText
-            android:hint="Cidade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:inputType="textCapWords"/>
+                <EditText
+                    android:hint="CEP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+            </LinearLayout>
 
-        <Spinner
-            android:id="@+id/states_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"/>
-    </LinearLayout>
-</LinearLayout>
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    style="@style/CustomImageView.Form"
+                    />
+
+                <EditText
+                    android:hint="Rua"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    style="@style/CustomImageView.Form"
+                    />
+
+                <EditText
+                    android:hint="Cidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:inputType="textPostalAddress"/>
+
+                <Spinner
+                    android:id="@+id/states_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    style="@style/CustomImageView.Form"
+                    />
+
+                <EditText
+                    android:hint="Numero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="15dp"
+                    android:inputType="textPostalAddress"/>
+
+                <EditText
+                    android:hint="Complemento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:inputType="textPostalAddress"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:text="Salvar"
+        style="@style/CustomButton"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

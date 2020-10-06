@@ -13,7 +13,11 @@
     <string name="menu_home">Home</string>
     <string name="menu_client">Clientes</string>
 
-    // DropDown Client
+    // New Cliente Form
+    <string name="hint_nome">Nome</string>
+    
+
+    // DropDown Client Form
     <string-array name="state_array">
         <item>SP</item>
         <item>PR</item>

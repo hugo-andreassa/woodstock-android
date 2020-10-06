@@ -7,13 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Não sei para que serve, não mexer. -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Button themes. -->
@@ -35,6 +34,28 @@
         <item name="android:layout_marginRight">30dp</item>
         <item name="android:layout_marginLeft">30dp</item>
         <item name="android:layout_marginBottom">30dp</item>
+    </style>
+
+    <!-- Linear Layout themes. -->
+    <style name="CustomLinearLayout">
+    </style>
+
+    <style name="CustomLinearLayout.Form">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- Edit Text themes. -->
+    <style name="CustomImageView">
+    </style>
+
+    <style name="CustomImageView.Form">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
 </resources>

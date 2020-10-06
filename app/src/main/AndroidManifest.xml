@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.client.NewClientActivity"></activity>
-        <activity android:name=".ui.client.ClientActivity" />
+        <activity
+            android:label="Adicionar Cliente"
+            android:name=".ui.client.NewClientActivity"
+            android:screenOrientation="sensor"/>
+        <activity android:name=".ui.client.ClientActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

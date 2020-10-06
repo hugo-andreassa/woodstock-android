@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#29434e</color>
     <color name="colorAccent">#66bb6a</color>
     <color name="backgroundColor">#546e7a</color>
+
+    <color name="errorMessageColor">#d64161</color>
+    <color name="successMessageColor">#86af49</color>
 </resources>
