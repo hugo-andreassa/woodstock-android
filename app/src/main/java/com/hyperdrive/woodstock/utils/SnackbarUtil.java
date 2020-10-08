@@ -1,19 +1,14 @@
 package com.hyperdrive.woodstock.utils;
 
 import android.app.Activity;
+import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hyperdrive.woodstock.R;
 
 public class SnackbarUtil {
 
-    public Activity activity;
-
-    public SnackbarUtil(Activity activity) {
-        this.activity = activity;
-    }
-
-    public void showError(String msg) {
+    public static void showError(Activity activity, String msg) {
         Snackbar snackbar = Snackbar.make(
                 activity.findViewById(android.R.id.content),
                 msg.toUpperCase(),
@@ -22,7 +17,7 @@ public class SnackbarUtil {
         snackbar.show();
     }
 
-    public void showSuccess(String msg) {
+    public static void showSuccess(Activity activity, String msg) {
         Snackbar snackbar = Snackbar.make(
                 activity.findViewById(android.R.id.content),
                 msg.toUpperCase(),

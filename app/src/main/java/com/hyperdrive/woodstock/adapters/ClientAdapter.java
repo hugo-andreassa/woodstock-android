@@ -8,14 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.ClientHolder;
+import com.hyperdrive.woodstock.models.ClientModel;
 
 import java.util.List;
 
 public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
 
-    private final List<String> mClients;
+    private final List<ClientModel> mClients;
 
-    public ClientAdapter(List<String> mClients) {
+    public ClientAdapter(List<ClientModel> mClients) {
         this.mClients = mClients;
     }
 
@@ -28,18 +29,8 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ClientHolder holder, int position) {
-        holder.title.setText(mClients.get(position));
-
-        holder.editButton.setOnClickListener(view -> updateItem(position));
-        holder.deleteButton.setOnClickListener(view -> removerItem(position));
-    }
-
-    private void removerItem(int position) {
-
-    }
-
-    private void updateItem(int position) {
-
+        ClientModel client = mClients.get(position);
+        holder.title.setText(client.getName());
     }
 
     @Override

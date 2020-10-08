@@ -15,7 +15,7 @@
 
     // New Cliente Form
     <string name="hint_nome">Nome</string>
-    
+
 
     // DropDown Client Form
     <string-array name="state_array">
@@ -26,4 +26,6 @@
         <item>MS</item>
         <item>GO</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

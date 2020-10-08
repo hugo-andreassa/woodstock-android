@@ -3,11 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/client_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     tools:context=".ui.client.ClientActivity">
+
+    <FrameLayout
+        android:id="@+id/client_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"/>
 
     <!-- TODO: create search view -->
     <SearchView
@@ -21,15 +25,14 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"/>
 
-    <!-- TODO: create client list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_client"
         tools:listitem="@layout/list_client"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="10dp"
         android:layout_below="@+id/search_client"/>
 
-    <!-- TODO: create FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_client"
         android:src="@drawable/ic_add_cliente"
@@ -41,4 +44,5 @@
         android:layout_margin="30dp"
         android:clickable="true"
         android:focusable="true" />
+
 </RelativeLayout>

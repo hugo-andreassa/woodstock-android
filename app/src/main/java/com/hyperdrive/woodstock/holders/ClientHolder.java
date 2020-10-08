@@ -12,13 +12,12 @@ import com.hyperdrive.woodstock.R;
 public class ClientHolder extends RecyclerView.ViewHolder {
 
     public TextView title;
+    public ImageButton moreButton;
     public ImageButton editButton;
     public ImageButton deleteButton;
 
     public ClientHolder(@NonNull View itemView) {
         super(itemView);
         title = (TextView) itemView.findViewById(R.id.list_client_name);
-        editButton = (ImageButton) itemView.findViewById(R.id.list_client_edit_button);
-        deleteButton = (ImageButton) itemView.findViewById(R.id.list_client_delete_button);
     }
 }

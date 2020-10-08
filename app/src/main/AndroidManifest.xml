@@ -2,18 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hyperdrive.woodstock">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:label="Adicionar Cliente"
-            android:name=".ui.client.NewClientActivity"
-            android:screenOrientation="sensor"/>
-        <activity android:name=".ui.client.ClientActivity"/>
+            android:label="Clientes"
+            android:name=".ui.client.ClientActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
