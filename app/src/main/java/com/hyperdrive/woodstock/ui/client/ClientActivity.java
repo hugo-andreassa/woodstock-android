@@ -1,19 +1,17 @@
 package com.hyperdrive.woodstock.ui.client;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
@@ -22,11 +20,12 @@ import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.listeners.RecyclerItemClickListener;
 import com.hyperdrive.woodstock.models.ClientModel;
-import com.hyperdrive.woodstock.ui.home.HomeFragment;
+import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
+import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,50 +33,43 @@ import retrofit2.Response;
 
 public class ClientActivity extends AppCompatActivity {
 
-    RecyclerView mRecyclerView;
-    ProgressDialog progressDialog;
+    private final String SERVER_ERROR_DELETE = "Erro ao deletar Cliente...";
+    private static final String TAG = "CLIENT_ACTIVITY";
+
+    private RecyclerView mRecyclerView;
+    private ClientAdapter mAdapter;
+    private ClientViewModel mClientViewModel;
+    private Preferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
 
-        progressDialog = new ProgressDialog(ClientActivity.this);
-        progressDialog.setMessage("Carregando....");
-        progressDialog.show();
+        sharedPreferences = new Preferences(this);
 
-        getClientsFromApi();
         setupFloatingActionButton();
+
+        mClientViewModel = new ClientViewModel();
+        mClientViewModel.getClients().observe(this, clients -> {
+            setupRecyclerView(clients);
+        });
     }
 
-    private void getClientsFromApi() {
-        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
-        Call<List<ClientModel>> call = clientService.findAll(1L);
-        call.enqueue(new Callback<List<ClientModel>>() {
-            @Override
-            public void onResponse(Call<List<ClientModel>> call, Response<List<ClientModel>> response) {
+    private void setupFloatingActionButton() {
+        FloatingActionButton fab = findViewById(R.id.fab_client);
+        fab.setOnClickListener(v -> {
+            ClientActionFragment clientActionFragment = new ClientActionFragment();
 
-                if(response.isSuccessful()) {
-                    setupRecyclerView(response.body());
-                    progressDialog.dismiss();
-                } else {
-                    progressDialog.dismiss();
-                    SnackbarUtil.showError(ClientActivity.this, "Erro ao carregar Clientes...");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ClientModel>> call, Throwable t) {
-                progressDialog.dismiss();
-                SnackbarUtil.showError(ClientActivity.this, "Erro ao carregar Clientes...");
-            }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.client_fragment_layout, clientActionFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
     }
 
     private void setupRecyclerView(List<ClientModel> clients) {
         mRecyclerView = findViewById(R.id.list_client);
-        ClientAdapter mAdapter;
-
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
@@ -103,7 +95,9 @@ public class ClientActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                        ClientActionFragment clientActionFragment = ClientActionFragment.newInstance(clients.get(position));
+
+                        ClientModel clientModel = clients.get(position);
+                        ClientActionFragment clientActionFragment = ClientActionFragment.newInstance(clientModel);
 
                         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.client_fragment_layout, clientActionFragment);
@@ -113,26 +107,51 @@ public class ClientActivity extends AppCompatActivity {
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "ME MATA PFVR",
-                                Toast.LENGTH_LONG)
-                                .show();
+                        ClientModel clientModel = clients.get(position);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ClientActivity.this);
+                        builder.setMessage("Deseja mesmo excluir o cadastro do(a) " + clientModel.getName())
+                                .setPositiveButton("Sim", (dialog, id) -> {
+                                    removeClientFromApi(clientModel.getId(), clients, position);
+                                })
+                                .setNegativeButton("Cancelar", (dialog, id) -> {
+                                    dialog.dismiss();
+                                });
+
+                        Dialog dialog = builder.create();
+                        dialog.show();
                     }
                 }));
     }
 
-    private void setupFloatingActionButton() {
-        FloatingActionButton fab = findViewById(R.id.fab_client);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClientActionFragment clientActionFragment = new ClientActionFragment();
+    private void updateRecyclerView(List<ClientModel> clients, int position) {
+        clients.remove(position);
+        mRecyclerView.removeViewAt(position);
+        mAdapter.notifyItemRemoved(position);
+        mAdapter.notifyItemRangeChanged(position, clients.size());
+    }
 
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.client_fragment_layout, clientActionFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+    private void removeClientFromApi(Long id, List<ClientModel> clients, int position) {
+        String auth = sharedPreferences.getAuthentication();
+
+        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
+        Call<Void> call = clientService.delete(id, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()) {
+                    updateRecyclerView(clients, position);
+                    SnackbarUtil.showSuccess(ClientActivity.this, "Cliente deletado com sucesso");
+                } else {
+                    SnackbarUtil.showError(ClientActivity.this, SERVER_ERROR_DELETE);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                SnackbarUtil.showError(ClientActivity.this, SERVER_ERROR_DELETE);
+                Log.e(TAG, t.getMessage());
             }
         });
     }

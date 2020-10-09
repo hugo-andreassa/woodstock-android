@@ -12,12 +12,10 @@
 
     <TextView
         android:text="Woodstock"
-        android:textSize="50sp"
+        android:textSize="40sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
         android:layout_marginTop="50dp"/>
 
     <ImageView

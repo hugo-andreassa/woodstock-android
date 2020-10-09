@@ -16,6 +16,7 @@
         android:drawableLeft="@drawable/ic_menu_client"
         android:drawableStart="@drawable/ic_menu_client" />
 
+    <!--
     <Button
         android:id="@+id/menu_orcamento"
         android:text="Orçamentos"
@@ -43,5 +44,6 @@
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_despesas"
         android:drawableStart="@drawable/ic_menu_despesas"/>
+    -->
 
 </LinearLayout>

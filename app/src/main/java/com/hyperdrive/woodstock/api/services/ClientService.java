@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -26,7 +27,12 @@ public interface ClientService {
 
     @PUT("clients/{id}")
     Call<Void> update(
-            @Path("id") long clientId,
+            @Path("id") Long clientId,
             @Body ClientModel client,
+            @Header("Authorization") String auth);
+
+    @DELETE("clients/{id}")
+    Call<Void> delete(
+            @Path("id") Long clientId,
             @Header("Authorization") String auth);
 }

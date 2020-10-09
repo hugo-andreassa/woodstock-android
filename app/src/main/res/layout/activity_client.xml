@@ -13,25 +13,12 @@
         android:layout_height="match_parent"
         android:elevation="10dp"/>
 
-    <!-- TODO: create search view -->
-    <SearchView
-        android:id="@+id/search_client"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:inputType="text"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_client"
         tools:listitem="@layout/list_client"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:layout_below="@+id/search_client"/>
+        android:padding="10dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_client"
@@ -41,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         android:clickable="true"
         android:focusable="true" />
 

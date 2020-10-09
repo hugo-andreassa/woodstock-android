@@ -27,13 +27,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class ClientActionFragment extends Fragment {
 
     private static final String ARG_PARAM = "CLIENT_MODEL";
+    private static final String TAG = "CLIENT_ACTION_FRAGMENT";
 
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
     private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados do Cliente";
-    private final String OK_REQUEST_UPDATE = "Cliente atualiza com sucesso";
+    private final String OK_REQUEST_UPDATE = "Cliente atualizado com sucesso";
     private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados do Cliente";
     private final String OK_REQUEST_INSERT = "Cliente inserido com sucesso";
 
@@ -145,13 +147,14 @@ public class ClientActionFragment extends Fragment {
 
             ClientModel clientModel = getValuesFromFields();
 
-            if(client != null) {
-                if(clientModel != null) {
+            if(clientModel != null) {
+                if (client != null) {
+
+                    clientModel.setId(client.getId());
+
                     progressDialog.show();
                     updateClientInApi(clientModel, v);
-                }
-            } else {
-                if(clientModel != null) {
+                } else {
                     progressDialog.show();
                     insertClientInAPi(clientModel, v);
                 }
@@ -160,6 +163,31 @@ public class ClientActionFragment extends Fragment {
     }
 
     private ClientModel getValuesFromFields() {
+        if(validateFields()) {
+            ClientModel clientModel = new ClientModel();
+
+            clientModel.setCpfOrCnpj(Mask.unmask(cpfOrCpnj.getText().toString()));
+            clientModel.setPhone(Mask.unmask(phone.getText().toString()));
+            clientModel.setName(name.getText().toString());
+            clientModel.setEmail(email.getText().toString());
+            clientModel.setCompanyId(1L);
+
+            AddressModel addressModel = new AddressModel();
+            addressModel.setCep(Mask.unmask(cep.getText().toString()));
+            addressModel.setStreet(street.getText().toString());
+            addressModel.setNumber(number.getText().toString());
+            addressModel.setComp(comp.getText().toString());
+            addressModel.setCity(city.getText().toString());
+
+            clientModel.setAddress(addressModel);
+
+            return clientModel;
+        }
+
+        return null;
+    }
+
+    public boolean validateFields() {
         String cpfAux = cpfOrCpnj.getText().toString();
         String phoneAux = phone.getText().toString();
         String nameAux = name.getText().toString();
@@ -169,28 +197,10 @@ public class ClientActionFragment extends Fragment {
             phone.setError("Esse campo é obrigatório");
             name.setError("Esse campo é obrigatório");
 
-            return null;
-        } else {
-            ClientModel clientModel = new ClientModel();
-            clientModel.setId(client.getId());
-
-            clientModel.setCpfOrCnpj(cpfAux);
-            clientModel.setPhone(phoneAux);
-            clientModel.setName(nameAux);
-            clientModel.setEmail(email.getText().toString());
-            clientModel.setCompanyId(1L);
-
-            AddressModel addressModel = new AddressModel();
-            addressModel.setCep(cep.getText().toString());
-            addressModel.setCep(street.getText().toString());
-            addressModel.setCep(number.getText().toString());
-            addressModel.setCep(comp.getText().toString());
-            addressModel.setCep(city.getText().toString());
-
-            clientModel.setAddress(addressModel);
-
-            return clientModel;
+            return false;
         }
+
+        return true;
     }
 
     private void updateClientInApi(ClientModel client, View v) {
@@ -208,7 +218,7 @@ public class ClientActionFragment extends Fragment {
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
-                    Log.e("CLIENT_ACTION", response.toString());
+                    Log.e(TAG, response.toString());
                 }
             }
 
@@ -235,7 +245,7 @@ public class ClientActionFragment extends Fragment {
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
-                    Log.e("CLIENT_ACTION", response.toString());
+                    Log.e(TAG, response.toString());
                 }
             }
 
