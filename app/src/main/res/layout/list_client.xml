@@ -11,5 +11,30 @@
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:padding="10dp"/>
+
+    <ImageButton
+        android:id="@+id/client_more_button"
+        android:src="@drawable/ic_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        style="@style/CustomImageButton"/>
+
+    <ImageButton
+        android:id="@+id/client_delete_button"
+        android:src="@drawable/ic_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        style="@style/CustomImageButton"/>
+
+    <ImageButton
+        android:id="@+id/client_budget_button"
+        android:src="@drawable/ic_menu_budget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        style="@style/CustomImageButton"/>
 </LinearLayout>
