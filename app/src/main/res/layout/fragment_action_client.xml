@@ -1,160 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/client_action_fragment"
     android:background="?android:attr/windowBackground">
-
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="40dp">
+        android:layout_height="wrap_content">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    android:src="@drawable/ic_client"
-                    style="@style/CustomImageView.Form"
-                    />
-                <EditText
-                    android:id="@+id/client_name"
-                    android:hint="@string/hint_nome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_cpf_cnpj"
-                    android:hint="CPF"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    android:src="@drawable/ic_phone"
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_phone"
-                    android:hint="Telefone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    android:src="@drawable/ic_email"
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_email"
-                    android:hint="E-mail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    android:src="@drawable/ic_location"
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_cep"
-                    android:hint="CEP"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_street"
-                    android:hint="Rua"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_city"
-                    android:hint="Cidade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginRight="10dp"
-                    android:inputType="textPostalAddress"/>
-
-                <Spinner
-                    android:id="@+id/client_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/CustomLinearLayout.Form">
-                <ImageView
-                    style="@style/CustomImageView.Form"
-                    />
-
-                <EditText
-                    android:id="@+id/client_number"
-                    android:hint="Numero"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginRight="15dp"
-                    android:inputType="textPostalAddress"/>
-
-                <EditText
-                    android:id="@+id/client_comp"
-                    android:hint="Complemento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:inputType="textPostalAddress"/>
-            </LinearLayout>
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_client"
+                style="@style/CustomImageView.Form"
+                />
+            <EditText
+                android:id="@+id/client_name"
+                android:hint="@string/hint_nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"/>
         </LinearLayout>
-    </ScrollView>
 
-    <Button
-        android:id="@+id/client_salvar_button"
-        android:text="Salvar"
-        style="@style/CustomButton"
-        android:layout_alignParentBottom="true"/>
-</RelativeLayout>
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/client_cpf_cnpj"
+                android:hint="CPF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_phone"
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/client_phone"
+                android:hint="Telefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form"
+            android:layout_marginBottom="50dp">
+            <ImageView
+                android:src="@drawable/ic_email"
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/client_email"
+                android:hint="E-mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/client_salvar_button"
+            android:text="Salvar"
+            style="@style/CustomButton"/>
+    </LinearLayout>
+</ScrollView>

@@ -2,17 +2,14 @@ package com.hyperdrive.woodstock.ui.client;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+
+import androidx.fragment.app.Fragment;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
@@ -30,7 +27,7 @@ import retrofit2.Response;
 
 public class ClientActionFragment extends Fragment {
 
-    private static final String ARG_PARAM = "CLIENT_MODEL";
+    private static final String ARG1 = "client";
     private static final String TAG = "CLIENT_ACTION_FRAGMENT";
 
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
@@ -47,12 +44,6 @@ public class ClientActionFragment extends Fragment {
     private EditText cpfOrCpnj;
     private EditText phone;
     private EditText email;
-    private EditText cep;
-    private EditText street;
-    private EditText city;
-    // EditText state = findViewById(R.id.client_state);
-    private EditText number;
-    private EditText comp;
 
     public ClientActionFragment() {
 
@@ -61,7 +52,7 @@ public class ClientActionFragment extends Fragment {
     public static ClientActionFragment newInstance(ClientModel client) {
         ClientActionFragment fragment = new ClientActionFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM, client);
+        args.putSerializable(ARG1, client);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +61,7 @@ public class ClientActionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            client = (ClientModel) getArguments().getSerializable(ARG_PARAM);
+            client = (ClientModel) getArguments().getSerializable(ARG1);
         }
     }
 
@@ -81,59 +72,31 @@ public class ClientActionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_action_client, container, false);
 
         setupEditTexts(v);
-        setupSpinnerDropdown(v);
         if(client != null) {
             loadFieldsInformation();
         }
+
         setupButton(v);
 
         return v;
     }
 
     private void setupEditTexts(View v) {
+        name = v.findViewById(R.id.client_name);
+        email = v.findViewById(R.id.client_email);
 
         cpfOrCpnj = v.findViewById(R.id.client_cpf_cnpj);
         cpfOrCpnj.addTextChangedListener(Mask.mask(cpfOrCpnj, Mask.CPF));
 
         phone = v.findViewById(R.id.client_phone);
         phone.addTextChangedListener(Mask.mask(phone, Mask.PHONE));
-
-        cep = v.findViewById(R.id.client_cep);
-        cep.addTextChangedListener(Mask.mask(cep, Mask.CEP));
-
-        name = v.findViewById(R.id.client_name);
-        email = v.findViewById(R.id.client_email);
-        street = v.findViewById(R.id.client_street);
-        city = v.findViewById(R.id.client_city);
-        // EditText state = findViewById(R.id.client_state);
-        number = v.findViewById(R.id.client_number);
-        comp = v.findViewById(R.id.client_comp);
     }
-
-    private void setupSpinnerDropdown(View v) {
-        Spinner spinner = v.findViewById(R.id.client_state);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
-                R.array.state_array, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-    }
-
 
     private void loadFieldsInformation() {
         cpfOrCpnj.setText(client.getCpfOrCnpj());
         phone.setText(client.getPhone());
         name.setText(client.getName());
         email.setText(client.getEmail());
-
-        cep.setText(client.getAddress().getCep());
-        street.setText(client.getAddress().getStreet());
-        city.setText(client.getAddress().getCity());
-        number.setText(client.getAddress().getNumber());
-        comp.setText(client.getAddress().getComp());
-
-        // EditText state = findViewById(R.id.client_state);
     }
 
     private void setupButton(View v) {
@@ -173,12 +136,6 @@ public class ClientActionFragment extends Fragment {
             clientModel.setCompanyId(1L);
 
             AddressModel addressModel = new AddressModel();
-            addressModel.setCep(Mask.unmask(cep.getText().toString()));
-            addressModel.setStreet(street.getText().toString());
-            addressModel.setNumber(number.getText().toString());
-            addressModel.setComp(comp.getText().toString());
-            addressModel.setCity(city.getText().toString());
-
             clientModel.setAddress(addressModel);
 
             return clientModel;

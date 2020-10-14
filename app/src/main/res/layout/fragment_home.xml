@@ -13,7 +13,6 @@
         android:id="@+id/menu_cliente"
         android:text="Clientes"
         style="@style/CustomButton.Home"
-        android:drawableLeft="@drawable/ic_menu_client"
         android:drawableStart="@drawable/ic_menu_client" />
 
     <!--

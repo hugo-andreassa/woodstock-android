@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/budget_action_fragment"
+    android:background="?android:attr/windowBackground">
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_time"
+                style="@style/CustomImageView.Form"
+                />
+            <EditText
+                android:id="@+id/budget_deadline"
+                android:hint="Prazo de Entrega"
+                android:autofillHints="Prazo de Entrega"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"
+                />
+            <EditText
+                android:id="@+id/budget_delivery_day"
+                android:hint="Data da entrega"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_payment"
+                style="@style/CustomImageView.Form"/>
+            <EditText
+                android:id="@+id/budget_payment_method"
+                android:hint="Método de Pagamento"
+                android:lines="3"
+                android:maxLines="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"/>
+            <Spinner
+                android:id="@+id/budget_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_location"
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/budget_cep"
+                android:hint="CEP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/budget_street"
+                android:hint="Rua"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"
+                />
+
+            <EditText
+                android:id="@+id/budget_city"
+                android:hint="Cidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:inputType="textPostalAddress"/>
+
+            <Spinner
+                android:id="@+id/budget_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form"
+            android:layout_marginBottom="20dp">
+            <ImageView
+                style="@style/CustomImageView.Form"/>
+
+            <EditText
+                android:id="@+id/budget_number"
+                android:hint="Numero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="15dp"
+                android:inputType="textPostalAddress"/>
+
+            <EditText
+                android:id="@+id/budget_comp"
+                android:hint="Complemento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="textPostalAddress"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/budget_pdf_button"
+            android:text="Gerar PDF"
+            android:textColor="#fff"
+            android:background="@color/backgroundColor"
+            android:layout_marginBottom="20dp"
+            style="@style/CustomButton"/>
+
+        <Button
+            android:id="@+id/budget_save_button"
+            android:text="Salvar"
+            style="@style/CustomButton" />
+    </LinearLayout>
+</ScrollView>

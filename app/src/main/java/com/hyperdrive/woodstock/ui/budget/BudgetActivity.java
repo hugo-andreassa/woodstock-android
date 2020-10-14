@@ -1,6 +1,4 @@
-package com.hyperdrive.woodstock.ui.client;
-
-import android.os.Bundle;
+package com.hyperdrive.woodstock.ui.budget;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,50 +6,58 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
+import com.hyperdrive.woodstock.adapters.BudgetAdapter;
 import com.hyperdrive.woodstock.adapters.ClientAdapter;
+import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.ui.client.ClientActionFragment;
+import com.hyperdrive.woodstock.viewmodel.BudgetViewModel;
 import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
 import java.util.List;
 
-public class ClientActivity extends AppCompatActivity {
-
-    private static final String TAG = "CLIENT_ACTIVITY";
+public class BudgetActivity extends AppCompatActivity {
 
     private Preferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client);
+        setContentView(R.layout.activity_budget);
 
         sharedPreferences = new Preferences(this);
 
         setupFloatingActionButton();
 
-        ClientViewModel mClientViewModel = new ClientViewModel();
-        mClientViewModel.getClients().observe(this, clients -> {
+        Bundle bundle = getIntent().getExtras();
+        Long clientId = bundle.getLong("clientId");
+
+        BudgetViewModel mBudgetViewModel = new BudgetViewModel();
+        mBudgetViewModel.getClients(clientId).observe(this, clients -> {
             setupRecyclerView(clients);
         });
     }
 
     private void setupFloatingActionButton() {
-        FloatingActionButton fab = findViewById(R.id.fab_client);
+        FloatingActionButton fab = findViewById(R.id.fab_budget);
         fab.setOnClickListener(v -> {
-            ClientActionFragment clientActionFragment = new ClientActionFragment();
+            BudgetActionFragment budgetActionFragment = new BudgetActionFragment();
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.client_fragment_layout, clientActionFragment);
+            transaction.replace(R.id.budget_fragment_layout, budgetActionFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
     }
 
-    private void setupRecyclerView(List<ClientModel> clients) {
-        RecyclerView mRecyclerView = findViewById(R.id.list_client);
+    private void setupRecyclerView(List<BudgetModel> budgets) {
+        RecyclerView mRecyclerView = findViewById(R.id.list_budget);
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
@@ -62,7 +68,7 @@ public class ClientActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        ClientAdapter mAdapter = new ClientAdapter(clients, sharedPreferences.getAuthentication());
+        BudgetAdapter mAdapter = new BudgetAdapter(budgets, sharedPreferences.getAuthentication());
         mRecyclerView.setAdapter(mAdapter);
     }
 }

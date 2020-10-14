@@ -16,16 +16,17 @@
     // New Cliente Form
     <string name="hint_nome">Nome</string>
 
-
-    // DropDown Client Form
+    // DropDown Budget Form
     <string-array name="state_array">
-        <item>SP</item>
-        <item>PR</item>
-        <item>RJ</item>
-        <item>MG</item>
-        <item>MS</item>
-        <item>GO</item>
+        <item>São Paulo</item>
+        <item>Rio de Janeiro</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    // DropDown Budget Form
+    <string-array name="status_array">
+        <item>NEGOCIANDO</item>
+        <item>FECHADO</item>
+        <item>COMPLETO</item>
+        <item>CANCELADO</item>
+    </string-array>
 </resources>

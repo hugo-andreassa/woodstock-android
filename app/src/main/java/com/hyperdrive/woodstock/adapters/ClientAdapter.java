@@ -2,6 +2,7 @@ package com.hyperdrive.woodstock.adapters;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hyperdrive.woodstock.MainActivity;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.holders.ClientHolder;
 import com.hyperdrive.woodstock.models.ClientModel;
+import com.hyperdrive.woodstock.ui.budget.BudgetActivity;
 import com.hyperdrive.woodstock.ui.client.ClientActionFragment;
 import com.hyperdrive.woodstock.ui.client.ClientActivity;
+import com.hyperdrive.woodstock.ui.login.LoginActivity;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.util.List;
@@ -53,7 +57,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
         holder.title.setText(client.getName());
 
         holder.budgetButton.setOnClickListener((v -> {
-
+            callBudgetActivity(v, client);
         }));
 
         holder.deleteButton.setOnClickListener((v -> {
@@ -63,6 +67,13 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
         holder.moreButton.setOnClickListener((v -> {
             callFragment(v, client);
         }));
+    }
+
+    private void callBudgetActivity(View v, ClientModel client) {
+        Intent intent = new Intent(v.getContext(), BudgetActivity.class);
+        intent.putExtra("clientId", client.getId());
+
+        v.getContext().startActivity(intent);
     }
 
     private void callFragment(View v, ClientModel client) {

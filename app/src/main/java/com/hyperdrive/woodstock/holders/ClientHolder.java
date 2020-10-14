@@ -16,7 +16,6 @@ public class ClientHolder extends RecyclerView.ViewHolder {
     public ImageButton moreButton;
     public ImageButton deleteButton;
 
-
     public ClientHolder(@NonNull View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.list_client_name);

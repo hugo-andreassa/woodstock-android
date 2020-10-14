@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.models;
 
-public class CompanyModel {
+import java.io.Serializable;
+
+public class CompanyModel implements Serializable {
 
     private Long id;
     private String tradingName;

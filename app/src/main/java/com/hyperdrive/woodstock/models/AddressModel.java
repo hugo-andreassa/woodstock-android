@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.models;
 
-public class AddressModel {
+import java.io.Serializable;
+
+public class AddressModel implements Serializable {
 
     private Long id;
     private String street;

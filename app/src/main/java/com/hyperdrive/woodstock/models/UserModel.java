@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.models;
 
-public class UserModel {
+import java.io.Serializable;
+
+public class UserModel implements Serializable {
 
     private Long id;
     private String name;

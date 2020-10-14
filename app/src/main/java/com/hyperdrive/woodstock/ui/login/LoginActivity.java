@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPreferences = new Preferences(LoginActivity.this);
 
-        Button button = findViewById(R.id.login);
+        Button button = findViewById(R.id.login_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

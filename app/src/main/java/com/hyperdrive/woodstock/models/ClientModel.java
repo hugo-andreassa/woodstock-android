@@ -1,6 +1,7 @@
 package com.hyperdrive.woodstock.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ClientModel implements Serializable {
 
@@ -12,8 +13,6 @@ public class ClientModel implements Serializable {
     private Long companyId;
 
     private AddressModel address;
-
-    // private List<Budgets> budgets;
 
     public ClientModel() {
     }
