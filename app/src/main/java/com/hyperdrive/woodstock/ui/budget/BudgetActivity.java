@@ -24,6 +24,7 @@ import java.util.List;
 public class BudgetActivity extends AppCompatActivity {
 
     private Preferences sharedPreferences;
+    private Long clientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class BudgetActivity extends AppCompatActivity {
         setupFloatingActionButton();
 
         Bundle bundle = getIntent().getExtras();
-        Long clientId = bundle.getLong("clientId");
+        clientId = bundle.getLong("clientId");
 
         BudgetViewModel mBudgetViewModel = new BudgetViewModel();
         mBudgetViewModel.getClients(clientId).observe(this, clients -> {
@@ -46,7 +47,7 @@ public class BudgetActivity extends AppCompatActivity {
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_budget);
         fab.setOnClickListener(v -> {
-            BudgetActionFragment budgetActionFragment = new BudgetActionFragment();
+            BudgetActionFragment budgetActionFragment = BudgetActionFragment.newInstance(null, clientId);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.budget_fragment_layout, budgetActionFragment);
@@ -68,7 +69,7 @@ public class BudgetActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        BudgetAdapter mAdapter = new BudgetAdapter(budgets, sharedPreferences.getAuthentication());
+        BudgetAdapter mAdapter = new BudgetAdapter(budgets, sharedPreferences.getAuthentication(), clientId);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

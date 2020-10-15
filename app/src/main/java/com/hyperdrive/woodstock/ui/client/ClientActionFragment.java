@@ -144,7 +144,7 @@ public class ClientActionFragment extends Fragment {
         return null;
     }
 
-    public boolean validateFields() {
+    private boolean validateFields() {
         String cpfAux = cpfOrCpnj.getText().toString();
         String phoneAux = phone.getText().toString();
         String nameAux = name.getText().toString();

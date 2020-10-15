@@ -1,30 +1,54 @@
 package com.hyperdrive.woodstock.ui.budget;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.hyperdrive.woodstock.R;
+import com.hyperdrive.woodstock.api.config.RetrofitConfig;
+import com.hyperdrive.woodstock.api.services.BudgetService;
+import com.hyperdrive.woodstock.api.services.ClientService;
+import com.hyperdrive.woodstock.models.AddressModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.models.ClientModel;
+import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.utils.Mask;
+import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BudgetActionFragment extends Fragment {
 
-    private static String ARG1 = "clientId";
-    private static String ARG2 = "budget";
+    private final String SERVER_ERROR = "Erro na comunicação com o servidor";
+    private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados do Orçamento";
+    private final String OK_REQUEST_UPDATE = "Orçamento atualizado com sucesso";
+    private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados do Orçamento";
+    private final String OK_REQUEST_INSERT = "Orçamento inserido com sucesso";
+
+    private static final String TAG = "BUDGET_ACTION_FRAGMENT";
+    private static final String ARG1 = "clientId";
+    private static final String ARG2 = "budget";
 
     private BudgetModel budget;
     private Long clientId;
@@ -40,6 +64,8 @@ public class BudgetActionFragment extends Fragment {
     private EditText number;
     private EditText comp;
 
+    private ProgressDialog progressDialog;
+    private Preferences sharedPreferences;
     private DatePickerDialog datepicker;
 
     public BudgetActionFragment() {
@@ -76,8 +102,33 @@ public class BudgetActionFragment extends Fragment {
         if(budget != null) {
             loadFieldsInformation();
         }
+        setupSaveButton(v);
 
         return v;
+    }
+
+    private void setupSaveButton(View v) {
+        progressDialog = new ProgressDialog(v.getContext());
+        progressDialog.setMessage("Carregando....");
+
+        sharedPreferences = new Preferences(v.getContext());
+
+        Button saveButton = v.findViewById(R.id.budget_save_button);
+        saveButton.setOnClickListener(view -> {
+            BudgetModel budgetModel = getValuesFromFields();
+
+            if(budgetModel != null) {
+                if (budget != null) {
+                    budgetModel.setId(budget.getId());
+
+                    progressDialog.show();
+                    updateBudgetInApi(budgetModel, v);
+                } else {
+                    progressDialog.show();
+                    insertBudgetInAPi(budgetModel, v);
+                }
+            }
+        });
     }
 
     private void setupSpinnerDropdownStatus(View v) {
@@ -100,12 +151,9 @@ public class BudgetActionFragment extends Fragment {
         spinnerEstados.setAdapter(adapter);
     }
 
-    private void loadFieldsInformation() {
-    }
-
     private void setupEditTexts(View v) {
-        EditText deadline = v.findViewById(R.id.budget_deadline);
-        EditText deliveryDay = v.findViewById(R.id.budget_delivery_day);
+        deadline = v.findViewById(R.id.budget_deadline);
+        deliveryDay = v.findViewById(R.id.budget_delivery_day);
         deliveryDay.setInputType(InputType.TYPE_NULL);
         deliveryDay.setOnClickListener(view -> {
             final Calendar cldr = Calendar.getInstance();
@@ -123,16 +171,144 @@ public class BudgetActionFragment extends Fragment {
             datepicker.show();
         });
 
-        EditText paymentMethod = v.findViewById(R.id.budget_payment_method);
+        paymentMethod = v.findViewById(R.id.budget_payment_method);
         paymentMethod.setText("Entrada de 30% e restante em até 10x no cartão.");
 
-        EditText cep = v.findViewById(R.id.budget_cep);
-        EditText street = v.findViewById(R.id.budget_street);
-        EditText city = v.findViewById(R.id.budget_city);
-        EditText number = v.findViewById(R.id.budget_number);
-        EditText comp = v.findViewById(R.id.budget_comp);
+        cep = v.findViewById(R.id.budget_cep);
+        cep.addTextChangedListener(Mask.mask(cep, Mask.CEP));
 
-        // Mask.mask(phone, Mask.PHONE)
+        street = v.findViewById(R.id.budget_street);
+        city = v.findViewById(R.id.budget_city);
+        number = v.findViewById(R.id.budget_number);
+        comp = v.findViewById(R.id.budget_comp);
     }
 
+    private void loadFieldsInformation() {
+        deadline.setText(String.valueOf(budget.getDeadline()));
+        if(budget.getDeliveryDay() != null) {
+            try {
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                Date date = sdf2.parse(budget.getDeliveryDay());
+                deliveryDay.setText(sdf1.format(date));
+            } catch (ParseException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        paymentMethod.setText(budget.getPaymentMethod());
+
+        cep.setText(budget.getAddress().getCep());
+        street.setText(budget.getAddress().getStreet());
+        city.setText(budget.getAddress().getCity());
+        number.setText(budget.getAddress().getNumber());
+        comp.setText(budget.getAddress().getComp());
+    }
+
+    private BudgetModel getValuesFromFields() {
+
+        if(validateFields()) {
+            BudgetModel budget = new BudgetModel();
+
+            budget.setClientId(clientId);
+
+            budget.setDeadline(Integer.parseInt(deadline.getText().toString()));
+            if(budget.getDeliveryDay() != null) {
+                try {
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                    Date date = sdf1.parse(deliveryDay.getText().toString());
+                    budget.setDeliveryDay(sdf2.format(date));
+                } catch (ParseException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+            budget.setPaymentMethod(paymentMethod.getText().toString());
+            // TODO: Status Orçamento
+            budget.setStatus("NEGOCIANDO");
+
+            AddressModel addressModel = new AddressModel();
+            addressModel.setCep(Mask.unmask(cep.getText().toString()));
+            addressModel.setStreet(street.getText().toString());
+            addressModel.setCity(city.getText().toString());
+            // TODO: Estado do Endereço
+            addressModel.setState("São Paulo");
+
+            addressModel.setNumber(number.getText().toString());
+            addressModel.setComp(comp.getText().toString());
+
+            budget.setAddress(addressModel);
+
+            return budget;
+        }
+
+        return null;
+    }
+
+    private boolean validateFields() {
+        String deadlineAux = deadline.getText().toString();
+        String paymentMethodAux = paymentMethod.getText().toString();
+
+        if(deadlineAux.isEmpty() || paymentMethodAux.isEmpty()) {
+            deadline.setError("Esse campo é obrigatório");
+            paymentMethod.setError("Esse campo é obrigatório");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateBudgetInApi(BudgetModel budget, View v) {
+        /* String auth = sharedPreferences.getAuthentication();
+
+        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
+        Call<Void> call = clientService.update(client.getId(), client, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                progressDialog.dismiss();
+
+                if(response.isSuccessful()) {
+                    SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
+                } else {
+                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+            }
+        });*/
+    }
+
+    private void insertBudgetInAPi(BudgetModel budget, View v) {
+        String auth = sharedPreferences.getAuthentication();
+
+        BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
+        Call<Void> call = budgetService.insert(budget, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                progressDialog.dismiss();
+                if(response.isSuccessful()) {
+                    SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
+                } else {
+                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
+                    Log.e(TAG, response.toString());
+                    Log.e(TAG, budget.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+            }
+        });
+    }
 }

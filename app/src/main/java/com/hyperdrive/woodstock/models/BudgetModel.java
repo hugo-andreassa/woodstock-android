@@ -1,14 +1,13 @@
 package com.hyperdrive.woodstock.models;
 
 import java.io.Serializable;
-import java.time.Instant;
 
 public class BudgetModel implements Serializable {
 
     private Long id;
     private Integer deadline;
-    private Instant deliveryDay;
-    private Instant creationDate;
+    private String deliveryDay;
+    private String creationDate;
     private String paymentMethod;
     private String status;
     private Long clientId;
@@ -20,7 +19,7 @@ public class BudgetModel implements Serializable {
 
     }
 
-    public BudgetModel(Long id, Integer deadline, Instant deliveryDay, Instant creationDate,
+    public BudgetModel(Long id, Integer deadline, String deliveryDay, String creationDate,
                        String paymentMethod, String status, Long clientId, AddressModel address) {
         this.id = id;
         this.deadline = deadline;
@@ -48,19 +47,19 @@ public class BudgetModel implements Serializable {
         this.deadline = deadline;
     }
 
-    public Instant getDeliveryDay() {
+    public String getDeliveryDay() {
         return deliveryDay;
     }
 
-    public void setDeliveryDay(Instant deliveryDay) {
+    public void setDeliveryDay(String deliveryDay) {
         this.deliveryDay = deliveryDay;
     }
 
-    public Instant getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Instant creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -94,5 +93,19 @@ public class BudgetModel implements Serializable {
 
     public void setAddress(AddressModel address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "BudgetModel{" +
+                "id=" + id +
+                ", deadline=" + deadline +
+                ", deliveryDay='" + deliveryDay + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", status='" + status + '\'' +
+                ", clientId=" + clientId +
+                ", address=" + address +
+                '}';
     }
 }
