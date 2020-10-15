@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
@@ -25,12 +26,15 @@ import com.hyperdrive.woodstock.models.AddressModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.utils.DateUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -185,16 +189,11 @@ public class BudgetActionFragment extends Fragment {
 
     private void loadFieldsInformation() {
         deadline.setText(String.valueOf(budget.getDeadline()));
-        if(budget.getDeliveryDay() != null) {
-            try {
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
-                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                Date date = sdf2.parse(budget.getDeliveryDay());
-                deliveryDay.setText(sdf1.format(date));
-            } catch (ParseException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
+
+        String date = DateUtil.formatDateFromServer(
+                budget.getDeliveryDay(),
+                DateUtil.DD_MM_YYYY);
+        deliveryDay.setText(date);
         paymentMethod.setText(budget.getPaymentMethod());
 
         cep.setText(budget.getAddress().getCep());
@@ -210,28 +209,20 @@ public class BudgetActionFragment extends Fragment {
             BudgetModel budget = new BudgetModel();
 
             budget.setClientId(clientId);
-
             budget.setDeadline(Integer.parseInt(deadline.getText().toString()));
-            if(budget.getDeliveryDay() != null) {
-                try {
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                    Date date = sdf1.parse(deliveryDay.getText().toString());
-                    budget.setDeliveryDay(sdf2.format(date));
-                } catch (ParseException e) {
-                    Log.e(TAG, e.getMessage());
-                }
-            }
+            String date = DateUtil.formatDateToServer(
+                    deliveryDay.getText().toString(),
+                    DateUtil.DD_MM_YYYY);
+            budget.setDeliveryDay(date);
             budget.setPaymentMethod(paymentMethod.getText().toString());
-            // TODO: Status Orçamento
-            budget.setStatus("NEGOCIANDO");
+            budget.setStatus(spinnerStatus.getSelectedItem().toString());
 
             AddressModel addressModel = new AddressModel();
             addressModel.setCep(Mask.unmask(cep.getText().toString()));
             addressModel.setStreet(street.getText().toString());
             addressModel.setCity(city.getText().toString());
-            // TODO: Estado do Endereço
-            addressModel.setState("São Paulo");
+
+            addressModel.setState(spinnerEstados.getSelectedItem().toString());
 
             addressModel.setNumber(number.getText().toString());
             addressModel.setComp(comp.getText().toString());
@@ -259,16 +250,15 @@ public class BudgetActionFragment extends Fragment {
     }
 
     private void updateBudgetInApi(BudgetModel budget, View v) {
-        /* String auth = sharedPreferences.getAuthentication();
+        String auth = sharedPreferences.getAuthentication();
 
-        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
-        Call<Void> call = clientService.update(client.getId(), client, auth);
+        BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
+        Call<Void> call = budgetService.update(budget.getId(), budget, auth);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 progressDialog.dismiss();
-
                 if(response.isSuccessful()) {
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
                 } else {
@@ -282,7 +272,7 @@ public class BudgetActionFragment extends Fragment {
                 progressDialog.dismiss();
                 SnackbarUtil.showError(getActivity(), SERVER_ERROR);
             }
-        });*/
+        });
     }
 
     private void insertBudgetInAPi(BudgetModel budget, View v) {

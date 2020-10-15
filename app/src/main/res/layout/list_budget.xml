@@ -40,6 +40,12 @@
             android:src="@drawable/ic_delete"
             android:clickable="?selectableItemBackground"
             style="@style/CustomImageButton"/>
+
+        <ImageButton
+            android:id="@+id/budget_list_itens_button"
+            android:src="@drawable/ic_itens"
+            android:clickable="?selectableItemBackground"
+            style="@style/CustomImageButton"/>
     </LinearLayout>
 
 </LinearLayout>

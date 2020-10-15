@@ -15,17 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.BudgetService;
-import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.holders.BudgetHolder;
 import com.hyperdrive.woodstock.models.BudgetModel;
-import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
-import com.hyperdrive.woodstock.ui.client.ClientActionFragment;
+import com.hyperdrive.woodstock.utils.DateUtil;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,15 +55,10 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
         BudgetModel budget = mBudgets.get(position);
 
         holder.status.setText(budget.getStatus());
-        try {
-            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = sdf1.parse(budget.getCreationDate());
-            holder.creationDate.setText(sdf2.format(date));
-        } catch (ParseException e) {
-            holder.creationDate.setText(budget.getCreationDate());
-            Log.e(TAG, e.getMessage());
-        }
+        String date = DateUtil.parseDateFromUtc(
+                budget.getCreationDate(),
+                DateUtil.DD_MM_YYYY_HH_MM_SS);
+        holder.creationDate.setText(date);
 
         holder.deleteButton.setOnClickListener((v -> {
             deleteBudget(v, position);
