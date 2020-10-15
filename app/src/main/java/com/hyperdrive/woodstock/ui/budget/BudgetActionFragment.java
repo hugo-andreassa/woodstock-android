@@ -1,11 +1,16 @@
 package com.hyperdrive.woodstock.ui.budget;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +35,12 @@ import com.hyperdrive.woodstock.utils.DateUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -38,6 +49,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +57,7 @@ import retrofit2.Response;
 public class BudgetActionFragment extends Fragment {
 
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
+    private final String SERVER_ERROR_DELETE = "Erro ao deletar Orçamento...";
     private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados do Orçamento";
     private final String OK_REQUEST_UPDATE = "Orçamento atualizado com sucesso";
     private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados do Orçamento";
@@ -99,24 +112,42 @@ public class BudgetActionFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_budget_action, container, false);
 
+        progressDialog = new ProgressDialog(v.getContext());
+        progressDialog.setMessage("Carregando....");
+        sharedPreferences = new Preferences(v.getContext());
+
         setupSpinnerDropdownStatus(v);
         setupSpinnerDropdownEstados(v);
 
         setupEditTexts(v);
         if(budget != null) {
             loadFieldsInformation();
+            setupDeleteButton(v);
+            setupPdfButton(v);
         }
+
         setupSaveButton(v);
 
         return v;
     }
 
+    private void setupPdfButton(View v) {
+        Button pdfButton = v.findViewById(R.id.budget_pdf_button);
+        pdfButton.setVisibility(View.VISIBLE);
+        pdfButton.setOnClickListener(view -> {
+            downloadPdfFromApi(v);
+        });
+    }
+
+    private void setupDeleteButton(View v) {
+        Button button = v.findViewById(R.id.budget_delete_button);
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(view -> {
+            deleteBudget(v);
+        });
+    }
+
     private void setupSaveButton(View v) {
-        progressDialog = new ProgressDialog(v.getContext());
-        progressDialog.setMessage("Carregando....");
-
-        sharedPreferences = new Preferences(v.getContext());
-
         Button saveButton = v.findViewById(R.id.budget_save_button);
         saveButton.setOnClickListener(view -> {
             BudgetModel budgetModel = getValuesFromFields();
@@ -260,6 +291,7 @@ public class BudgetActionFragment extends Fragment {
 
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
+                    BudgetActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
@@ -286,6 +318,7 @@ public class BudgetActionFragment extends Fragment {
 
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
+                    BudgetActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
@@ -300,5 +333,122 @@ public class BudgetActionFragment extends Fragment {
                 SnackbarUtil.showError(getActivity(), SERVER_ERROR);
             }
         });
+    }
+
+    private void deleteBudget(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setMessage("Deseja mesmo excluir este orçamento?")
+                .setPositiveButton("Sim", (dialog, id) -> {
+                    deleteBudgetFromApi(budget.getId(), v);
+                })
+                .setNegativeButton("Cancelar", (dialog, id) -> {
+                    dialog.dismiss();
+                });
+
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteBudgetFromApi(Long id, View v) {
+        String auth = sharedPreferences.getAuthentication();
+
+        BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
+        Call<Void> call = budgetService.delete(id, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()) {
+                    BudgetActivity.updateRecyclerView();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
+                } else {
+                    SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR_DELETE);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR_DELETE);
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    private void downloadPdfFromApi(View v) {
+        String auth = sharedPreferences.getAuthentication();
+
+        BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
+        Call<ResponseBody> call = budgetService.downloadPdf(1l, clientId, budget.getId(), auth);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    SnackbarUtil.showSuccess((AppCompatActivity) v.getContext(), "Download em andamento...");
+                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                } else {
+                    SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR);
+                Log.e(TAG, t.getMessage());
+            }
+        });
+
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            // todo change the file location/name according to your needs
+            File destinationFile = new File(
+                    Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS), "Orçamento.pdf");
+            Log.e(TAG, "OK");
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                Log.e(TAG, "OK");
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(destinationFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                Log.e(TAG, "OK");
+
+                return true;
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            return false;
+        }
     }
 }

@@ -24,7 +24,7 @@ public class BudgetViewModel  extends ViewModel {
 
     private MutableLiveData<List<BudgetModel>> budgets;
 
-    public LiveData<List<BudgetModel>> getClients(Long id) {
+    public LiveData<List<BudgetModel>> getBudgets(Long id) {
         if (budgets == null) {
             budgets = new MutableLiveData<>();
         }

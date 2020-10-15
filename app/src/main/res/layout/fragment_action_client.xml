@@ -75,5 +75,13 @@
             android:id="@+id/client_salvar_button"
             android:text="Salvar"
             style="@style/CustomButton"/>
+
+        <Button
+            android:id="@+id/client_deletar_button"
+            android:text="Deletar"
+            android:layout_marginTop="15dp"
+            android:background="@color/design_default_color_error"
+            android:visibility="gone"
+            style="@style/CustomButton"/>
     </LinearLayout>
 </ScrollView>

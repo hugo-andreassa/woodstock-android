@@ -15,6 +15,7 @@ import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientActivity extends AppCompatActivity {
@@ -22,6 +23,8 @@ public class ClientActivity extends AppCompatActivity {
     private static final String TAG = "CLIENT_ACTIVITY";
 
     private Preferences sharedPreferences;
+    private static ClientViewModel mClientViewModel;
+    private ClientAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +34,11 @@ public class ClientActivity extends AppCompatActivity {
         sharedPreferences = new Preferences(this);
 
         setupFloatingActionButton();
+        setupRecyclerView(new ArrayList<>());
 
-        ClientViewModel mClientViewModel = new ClientViewModel();
+        mClientViewModel = new ClientViewModel();
         mClientViewModel.getClients().observe(this, clients -> {
-            setupRecyclerView(clients);
+            mAdapter.updateData(clients);
         });
     }
 
@@ -62,7 +66,11 @@ public class ClientActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        ClientAdapter mAdapter = new ClientAdapter(clients, sharedPreferences.getAuthentication());
+        mAdapter = new ClientAdapter(clients, sharedPreferences.getAuthentication());
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public static void updateRecyclerView() {
+        mClientViewModel.getClients();
     }
 }

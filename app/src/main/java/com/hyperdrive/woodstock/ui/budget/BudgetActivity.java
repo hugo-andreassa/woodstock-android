@@ -1,12 +1,18 @@
 package com.hyperdrive.woodstock.ui.budget;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
@@ -19,29 +25,37 @@ import com.hyperdrive.woodstock.ui.client.ClientActionFragment;
 import com.hyperdrive.woodstock.viewmodel.BudgetViewModel;
 import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BudgetActivity extends AppCompatActivity {
 
-    private Preferences sharedPreferences;
-    private Long clientId;
+    private static Long clientId;
+    private BudgetAdapter mAdapter;
+    private static BudgetViewModel mBudgetViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
-        sharedPreferences = new Preferences(this);
+        // LET CODE IN PEACE
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         setupFloatingActionButton();
 
         Bundle bundle = getIntent().getExtras();
         clientId = bundle.getLong("clientId");
 
-        BudgetViewModel mBudgetViewModel = new BudgetViewModel();
-        mBudgetViewModel.getClients(clientId).observe(this, clients -> {
-            setupRecyclerView(clients);
+        setupRecyclerView(new ArrayList<>());
+
+        mBudgetViewModel = new BudgetViewModel();
+        mBudgetViewModel.getBudgets(clientId).observe(this, budgets -> {
+            mAdapter.updateData(budgets);
         });
+
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 101);
     }
 
     private void setupFloatingActionButton() {
@@ -54,7 +68,6 @@ public class BudgetActivity extends AppCompatActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         });
-
     }
 
     private void setupRecyclerView(List<BudgetModel> budgets) {
@@ -69,7 +82,24 @@ public class BudgetActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        BudgetAdapter mAdapter = new BudgetAdapter(budgets, sharedPreferences.getAuthentication(), clientId);
+        mAdapter = new BudgetAdapter(budgets, clientId);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public static void updateRecyclerView() {
+        mBudgetViewModel.getBudgets(clientId);
+    }
+
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        } else if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(getApplicationContext(), "Permission was denied", Toast.LENGTH_SHORT).show();
+        }
     }
 }

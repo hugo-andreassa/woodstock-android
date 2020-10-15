@@ -1,5 +1,7 @@
 package com.hyperdrive.woodstock.ui.client;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.hyperdrive.woodstock.R;
@@ -31,6 +34,7 @@ public class ClientActionFragment extends Fragment {
     private static final String TAG = "CLIENT_ACTION_FRAGMENT";
 
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
+    private final String SERVER_ERROR_DELETE = "Erro ao deletar Cliente...";
     private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados do Cliente";
     private final String OK_REQUEST_UPDATE = "Cliente atualizado com sucesso";
     private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados do Cliente";
@@ -71,14 +75,27 @@ public class ClientActionFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_action_client, container, false);
 
+        sharedPreferences = new Preferences(getContext());
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Carregando...");
+
         setupEditTexts(v);
         if(client != null) {
             loadFieldsInformation();
+            setupDeleteButton(v);
         }
 
-        setupButton(v);
+        setupSaveButton(v);
 
         return v;
+    }
+
+    private void setupDeleteButton(View v) {
+        Button button = v.findViewById(R.id.client_deletar_button);
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(view -> {
+            deleteClient(v);
+        });
     }
 
     private void setupEditTexts(View v) {
@@ -99,15 +116,9 @@ public class ClientActionFragment extends Fragment {
         email.setText(client.getEmail());
     }
 
-    private void setupButton(View v) {
-        progressDialog = new ProgressDialog(v.getContext());
-        progressDialog.setMessage("Carregando....");
-
-        sharedPreferences = new Preferences(v.getContext());
-
+    private void setupSaveButton(View v) {
         Button salvarButton = v.findViewById(R.id.client_salvar_button);
         salvarButton.setOnClickListener(view -> {
-
             ClientModel clientModel = getValuesFromFields();
 
             if(clientModel != null) {
@@ -172,6 +183,7 @@ public class ClientActionFragment extends Fragment {
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()) {
+                    ClientActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
@@ -199,6 +211,7 @@ public class ClientActionFragment extends Fragment {
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()) {
+                    ClientActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
@@ -210,6 +223,45 @@ public class ClientActionFragment extends Fragment {
             public void onFailure(Call<Void> call, Throwable t) {
                 progressDialog.dismiss();
                 SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+            }
+        });
+    }
+
+    private void deleteClient(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setMessage("Deseja mesmo excluir este cadastro?")
+                .setPositiveButton("Sim", (dialog, id) -> {
+                    deleteClientFromApi(client.getId(), v);
+                })
+                .setNegativeButton("Cancelar", (dialog, id) -> {
+                    dialog.dismiss();
+                });
+
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteClientFromApi(Long id, View v) {
+        String auth = sharedPreferences.getAuthentication();
+
+        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
+        Call<Void> call = clientService.delete(id, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()) {
+                    ClientActivity.updateRecyclerView();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
+                } else {
+                    SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR_DELETE);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR_DELETE);
+                Log.e(TAG, t.getMessage());
             }
         });
     }

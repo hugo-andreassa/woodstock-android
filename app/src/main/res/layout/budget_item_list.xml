@@ -9,7 +9,7 @@
     android:padding="10dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1">
@@ -30,15 +30,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageButton
-            android:id="@+id/budget_list_more_button"
+            android:id="@+id/budgetitem_list_more_button"
             android:src="@drawable/ic_add"
-            android:background="?selectableItemBackground"
+            android:clickable="?selectableItemBackground"
             style="@style/CustomImageButton"/>
 
         <ImageButton
-            android:id="@+id/budget_list_itens_button"
+            android:id="@+id/budgetitem_list_projects_button"
             android:src="@drawable/ic_itens"
-            android:background="?selectableItemBackground"
+            android:clickable="?selectableItemBackground"
+            style="@style/CustomImageButton"/>
+
+        <ImageButton
+            android:id="@+id/budgetitem_list_cut_button"
+            android:src="@drawable/ic_itens"
+            android:clickable="?selectableItemBackground"
             style="@style/CustomImageButton"/>
     </LinearLayout>
 
