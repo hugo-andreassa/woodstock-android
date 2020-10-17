@@ -13,13 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.budgetitem.BudgetItemActivity"></activity>
+        <activity
+            android:name=".ui.budgetitem.BudgetItemActivity"
+            android:label="Itens do Orçamento">
+        </activity>
         <activity
             android:name=".ui.budget.BudgetActivity"
-            android:label="Orçamentos" />
+            android:label="Orçamentos"/>
         <activity
             android:name=".ui.client.ClientActivity"
-            android:label="Clientes" />
+            android:label="Clientes"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

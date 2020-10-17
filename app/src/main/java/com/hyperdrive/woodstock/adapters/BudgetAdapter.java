@@ -1,5 +1,6 @@
 package com.hyperdrive.woodstock.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.BudgetHolder;
 import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
+import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
 import com.hyperdrive.woodstock.utils.DateUtil;
 
 import java.util.List;
+import java.util.Locale;
 
 public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
 
@@ -40,15 +43,31 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
     public void onBindViewHolder(@NonNull BudgetHolder holder, int position) {
         BudgetModel budget = mBudgets.get(position);
 
-        holder.status.setText(budget.getStatus());
+        String status = String.format(
+                Locale.forLanguageTag("BR"),
+                "Orçamento %d - %s",
+                position + 1, budget.getStatus());
+        holder.status.setText(status);
+
         String date = DateUtil.parseDateFromUtc(
                 budget.getCreationDate(),
                 DateUtil.DD_MM_YYYY_HH_MM_SS);
         holder.creationDate.setText(date);
 
-        holder.moreButton.setOnClickListener((v -> {
+        holder.moreButton.setOnClickListener((v) -> {
             callFragment(v, budget);
-        }));
+        });
+
+        holder.itensButton.setOnClickListener((v) -> {
+            callBudgetItemActivity(v, budget.getId());
+        });
+    }
+
+    private void callBudgetItemActivity(View v, Long id) {
+        Intent intent = new Intent(v.getContext(), BudgetItemActivity.class);
+        intent.putExtra("budgetId", id);
+
+        v.getContext().startActivity(intent);
     }
 
     private void callFragment(View v, BudgetModel budgetModel) {
