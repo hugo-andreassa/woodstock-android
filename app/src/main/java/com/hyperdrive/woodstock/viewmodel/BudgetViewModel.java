@@ -29,12 +29,12 @@ public class BudgetViewModel  extends ViewModel {
             budgets = new MutableLiveData<>();
         }
 
-        loadClientsFromApi(id);
+        loadBudgetsFromApi(id);
 
         return budgets;
     }
 
-    private void loadClientsFromApi(Long id) {
+    private void loadBudgetsFromApi(Long id) {
         BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
         Call<List<BudgetModel>> call = budgetService.findAll(id);
         call.enqueue(new Callback<List<BudgetModel>>() {
@@ -48,7 +48,7 @@ public class BudgetViewModel  extends ViewModel {
 
             @Override
             public void onFailure(Call<List<BudgetModel>> call, Throwable t) {
-                Log.e(TAG, "onFailure findAll Clients");
+                Log.e(TAG, "onFailure findAll Budgets");
             }
         });
 

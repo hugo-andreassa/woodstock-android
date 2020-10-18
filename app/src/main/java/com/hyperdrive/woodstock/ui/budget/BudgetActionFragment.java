@@ -64,8 +64,8 @@ public class BudgetActionFragment extends Fragment {
     private final String OK_REQUEST_INSERT = "Orçamento inserido com sucesso";
 
     private static final String TAG = "BUDGET_ACTION_FRAGMENT";
-    private static final String ARG1 = "clientId";
-    private static final String ARG2 = "budget";
+    private static final String ARG_PARAM1 = "clientId";
+    private static final String ARG_PARAM2 = "budget";
 
     private BudgetModel budget;
     private Long clientId;
@@ -91,8 +91,8 @@ public class BudgetActionFragment extends Fragment {
     public static BudgetActionFragment newInstance(BudgetModel budget, Long clientId) {
         BudgetActionFragment fragment = new BudgetActionFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG1, clientId);
-        args.putSerializable(ARG2, budget);
+        args.putLong(ARG_PARAM1, clientId);
+        args.putSerializable(ARG_PARAM2, budget);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,8 +101,8 @@ public class BudgetActionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            clientId = getArguments().getLong(ARG1);
-            budget = (BudgetModel) getArguments().getSerializable(ARG2);
+            clientId = getArguments().getLong(ARG_PARAM1);
+            budget = (BudgetModel) getArguments().getSerializable(ARG_PARAM2);
         }
     }
 

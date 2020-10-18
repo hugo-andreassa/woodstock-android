@@ -33,11 +33,9 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
     private static final String TAG = "CLIENT_ACTIVITY";
 
     private final List<ClientModel> mClients;
-    private final String auth;
 
-    public ClientAdapter(List<ClientModel> mClients, String auth) {
+    public ClientAdapter(List<ClientModel> mClients) {
         this.mClients = mClients;
-        this.auth = auth;
     }
 
     @NonNull
@@ -64,6 +62,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
     private void callBudgetActivity(View v, ClientModel client) {
         Intent intent = new Intent(v.getContext(), BudgetActivity.class);
         intent.putExtra("clientId", client.getId());
+        intent.putExtra("clientName", client.getName());
 
         v.getContext().startActivity(intent);
     }

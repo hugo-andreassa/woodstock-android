@@ -66,7 +66,7 @@ public class ClientActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        mAdapter = new ClientAdapter(clients, sharedPreferences.getAuthentication());
+        mAdapter = new ClientAdapter(clients);
         mRecyclerView.setAdapter(mAdapter);
     }
 

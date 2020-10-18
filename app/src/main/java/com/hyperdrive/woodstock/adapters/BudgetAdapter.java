@@ -63,6 +63,11 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
         });
     }
 
+    @Override
+    public int getItemCount() {
+        return mBudgets != null ? mBudgets.size() : 0;
+    }
+
     private void callBudgetItemActivity(View v, Long id) {
         Intent intent = new Intent(v.getContext(), BudgetItemActivity.class);
         intent.putExtra("budgetId", id);
@@ -79,11 +84,6 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
         transaction.replace(R.id.budget_fragment_layout, budgetActionFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mBudgets != null ? mBudgets.size() : 0;
     }
 
     public void updateData(List<BudgetModel> budgets) {

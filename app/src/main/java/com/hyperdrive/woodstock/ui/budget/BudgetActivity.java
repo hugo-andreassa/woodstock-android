@@ -43,11 +43,14 @@ public class BudgetActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        setupFloatingActionButton();
-
         Bundle bundle = getIntent().getExtras();
         clientId = bundle.getLong("clientId");
+        String clientName = bundle.getString("clientName");
 
+        // Troca o titulo da Activity
+        setTitle("Orçamentos " + clientName);
+
+        setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
         mBudgetViewModel = new BudgetViewModel();

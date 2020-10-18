@@ -1,16 +1,21 @@
 package com.hyperdrive.woodstock.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.BudgetItemHolder;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
+import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
+import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
 
 import java.util.List;
 import java.util.Locale;
@@ -48,7 +53,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
         holder.description.setText(budgetItem.getDescription());
 
         holder.moreButton.setOnClickListener((v) -> {
-            Toast.makeText(v.getContext(), "More Button Clicked", Toast.LENGTH_LONG).show();
+            callFragment(v, budgetItem);
         });
 
         holder.projectsButton.setOnClickListener((v) -> {
@@ -63,6 +68,17 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
     @Override
     public int getItemCount() {
         return mBudgetItems != null ? mBudgetItems.size() : 0;
+    }
+
+    private void callFragment(View v, BudgetItemModel budgetItem) {
+        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+
+        BudgetItemActionFragment budgetItemActionFragment = BudgetItemActionFragment.newInstance(budgetId, budgetItem);
+
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void updateData(List<BudgetItemModel> budgetItems) {

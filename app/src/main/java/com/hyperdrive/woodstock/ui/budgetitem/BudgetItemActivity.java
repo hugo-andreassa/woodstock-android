@@ -15,6 +15,7 @@ import com.hyperdrive.woodstock.adapters.BudgetItemAdapter;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
+import com.hyperdrive.woodstock.viewmodel.BudgetItemViewModel;
 import com.hyperdrive.woodstock.viewmodel.BudgetViewModel;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class BudgetItemActivity extends AppCompatActivity {
 
     private static Long budgetId;
     private BudgetItemAdapter mAdapter;
-    // private static BudgetItemViewModel mBudgetItemViewModel;
+    private static BudgetItemViewModel mBudgetItemViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +36,32 @@ public class BudgetItemActivity extends AppCompatActivity {
         budgetId = bundle.getLong("budgetId");
 
         setupFloatingActionButton();
+        setupRecyclerView(new ArrayList<>());
 
-        List<BudgetItemModel> budgetItems = new ArrayList<>();
-        for (int i=1; i<=20; i++) {
-            budgetItems.add(new BudgetItemModel(null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla rhoncus mauris, sit amet ornare massa euismod ac. Nam sodales nisi sit amet tellus tempus faucibus. Donec hendrerit justo eu velit eleifend mattis. Donec rhoncus ipsum lorem. In quis augue erat. Sed neque tellus, vehicula id felis ac, tincidunt gravida ante.",
+        mBudgetItemViewModel = new BudgetItemViewModel();
+        mBudgetItemViewModel.getBudgetItems(budgetId).observe(this, budgetItems -> {
+            // mAdapter.updateData(budgetItems);
+
+            List<BudgetItemModel> items = new ArrayList<>();
+            for (int i=1; i<=20; i++) {
+                items.add(new BudgetItemModel(null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla rhoncus mauris, sit amet ornare massa euismod ac. Nam sodales nisi sit amet tellus tempus faucibus. Donec hendrerit justo eu velit eleifend mattis. Donec rhoncus ipsum lorem. In quis augue erat. Sed neque tellus, vehicula id felis ac, tincidunt gravida ante.",
                     null, null, "Tittle", null,
                     null));
-        }
+            }
 
-        setupRecyclerView(budgetItems);
+            mAdapter.updateData(items);
+        });
     }
 
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_budgetitem);
         fab.setOnClickListener(v -> {
-            // BudgetItemActionFragment budgetItemActionFragment = BudgetActionFragment.newInstance(null, budgetId);
+            BudgetItemActionFragment budgetItemActionFragment = BudgetItemActionFragment.newInstance(budgetId, null);
 
-            /* FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);
             transaction.addToBackStack(null);
-            transaction.commit(); */
+            transaction.commit();
         });
     }
 
@@ -70,5 +77,9 @@ public class BudgetItemActivity extends AppCompatActivity {
 
         mAdapter = new BudgetItemAdapter(budgetItems, budgetId);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public static void updateRecyclerView() {
+        mBudgetItemViewModel.getBudgetItems(budgetId);
     }
 }

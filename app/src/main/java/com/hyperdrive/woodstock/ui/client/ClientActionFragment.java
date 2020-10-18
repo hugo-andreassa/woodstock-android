@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class ClientActionFragment extends Fragment {
 
-    private static final String ARG1 = "client";
+    private static final String ARG_PARAM1 = "client";
     private static final String TAG = "CLIENT_ACTION_FRAGMENT";
 
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
@@ -56,7 +56,7 @@ public class ClientActionFragment extends Fragment {
     public static ClientActionFragment newInstance(ClientModel client) {
         ClientActionFragment fragment = new ClientActionFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG1, client);
+        args.putSerializable(ARG_PARAM1, client);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class ClientActionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            client = (ClientModel) getArguments().getSerializable(ARG1);
+            client = (ClientModel) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
