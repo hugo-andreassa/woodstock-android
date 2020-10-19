@@ -154,6 +154,13 @@ public class ClientActionFragment extends Fragment {
             clientModel.setCompanyId(1L);
 
             AddressModel addressModel = new AddressModel();
+            addressModel.setCep("");
+            addressModel.setCity("");
+            addressModel.setComp("");
+            addressModel.setNumber("");
+            addressModel.setState("");
+            addressModel.setStreet("");
+
             clientModel.setAddress(addressModel);
 
             return clientModel;
@@ -163,15 +170,11 @@ public class ClientActionFragment extends Fragment {
     }
 
     private boolean validateFields() {
-        String cpfAux = cpfOrCpnj.getText().toString();
-        String phoneAux = phone.getText().toString();
         String nameAux = name.getText().toString();
 
-        if(cpfAux.isEmpty() || phoneAux.isEmpty() || nameAux.isEmpty()) {
+        if(nameAux.isEmpty()) {
             String error = getActivity().getResources().getString(R.string.campo_obrigatorio);
 
-            cpfOrCpnj.setError(error);
-            phone.setError(error);
             name.setError(error);
 
             return false;

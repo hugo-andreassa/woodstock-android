@@ -57,10 +57,10 @@ public class DateUtil {
                 return sdfFormat.format(date);
             } catch (ParseException e) {
                 Log.e(TAG, e.getMessage());
-                return null;
+                return "";
             }
         }
-        return null;
+        return "";
     }
 
     public static String formatDateFromServer(String dateToParse, String formatPattern) {
@@ -79,10 +79,10 @@ public class DateUtil {
                 return sdfFormat.format(date);
             } catch (ParseException e) {
                 Log.e(TAG, e.getMessage());
-                return null;
+                return "";
             }
         }
-        return null;
+        return "";
     }
 
     public static String formatDate(String dateToParse, String parsePattern, String formatPattern) {
@@ -101,9 +101,9 @@ public class DateUtil {
                 return sdfFormat.format(date);
             } catch (ParseException e) {
                 Log.e(TAG, e.getMessage());
-                return null;
+                return "";
             }
         }
-        return null;
+        return "";
     }
 }

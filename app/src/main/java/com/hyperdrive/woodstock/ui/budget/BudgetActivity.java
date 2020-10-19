@@ -39,9 +39,7 @@ public class BudgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
-        // LET ME CODE IN PEACE
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
 
         Bundle bundle = getIntent().getExtras();
         clientId = bundle.getLong("clientId");
@@ -57,8 +55,6 @@ public class BudgetActivity extends AppCompatActivity {
         mBudgetViewModel.getBudgets(clientId).observe(this, budgets -> {
             mAdapter.updateData(budgets);
         });
-
-        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 101);
     }
 
     private void setupFloatingActionButton() {

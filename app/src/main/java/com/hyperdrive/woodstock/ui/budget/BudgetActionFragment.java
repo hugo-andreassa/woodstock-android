@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +48,8 @@ import retrofit2.Response;
 
 public class BudgetActionFragment extends Fragment {
 
+    private static final String TAG = "BUDGET_ACTION_FRAGMENT";
+
     private final String SERVER_ERROR = "Erro na comunicação com o servidor";
     private final String SERVER_ERROR_DELETE = "Erro ao deletar Orçamento...";
     private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados do Orçamento";
@@ -52,7 +57,6 @@ public class BudgetActionFragment extends Fragment {
     private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados do Orçamento";
     private final String OK_REQUEST_INSERT = "Orçamento inserido com sucesso";
 
-    private static final String TAG = "BUDGET_ACTION_FRAGMENT";
     private static final String ARG_PARAM1 = "clientId";
     private static final String ARG_PARAM2 = "budget";
 
@@ -397,10 +401,18 @@ public class BudgetActionFragment extends Fragment {
         Call<ResponseBody> call = budgetService.downloadPdf(1l, clientId, budget.getId(), auth);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     SnackbarUtil.showSuccess((AppCompatActivity) v.getContext(), "Download em andamento...");
-                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+
+                            return null;
+                        }
+                    }.execute();
+
                 } else {
                     SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR);
                     Log.e(TAG, response.toString());
@@ -418,12 +430,11 @@ public class BudgetActionFragment extends Fragment {
 
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
-
             String clientName = getActivity().getTitle().toString().substring(11);
 
             File destinationFile = new File(
-                    Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS),  "Orçamento " + clientName + ".pdf");
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    "Orçamento " + clientName + ".pdf");
             Log.e(TAG, "OK");
 
             InputStream inputStream = null;
