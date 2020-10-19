@@ -9,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.ClientService;
@@ -44,10 +44,10 @@ public class ClientActionFragment extends Fragment {
     private ProgressDialog progressDialog;
     private Preferences sharedPreferences;
 
-    private EditText name;
-    private EditText cpfOrCpnj;
-    private EditText phone;
-    private EditText email;
+    private TextInputEditText name;
+    private TextInputEditText cpfOrCpnj;
+    private TextInputEditText phone;
+    private TextInputEditText email;
 
     public ClientActionFragment() {
 
@@ -73,7 +73,7 @@ public class ClientActionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_action_client, container, false);
+        View v = inflater.inflate(R.layout.fragment_client_action, container, false);
 
         sharedPreferences = new Preferences(getContext());
         progressDialog = new ProgressDialog(getContext());
@@ -116,6 +116,13 @@ public class ClientActionFragment extends Fragment {
         email.setText(client.getEmail());
     }
 
+    private void clearFields() {
+        cpfOrCpnj.setText("");
+        phone.setText("");
+        name.setText("");
+        email.setText("");
+    }
+
     private void setupSaveButton(View v) {
         Button salvarButton = v.findViewById(R.id.client_salvar_button);
         salvarButton.setOnClickListener(view -> {
@@ -130,7 +137,7 @@ public class ClientActionFragment extends Fragment {
                     updateClientInApi(clientModel, v);
                 } else {
                     progressDialog.show();
-                    insertClientInAPi(clientModel, v);
+                    insertClientInApi(clientModel, v);
                 }
             }
         });
@@ -161,9 +168,11 @@ public class ClientActionFragment extends Fragment {
         String nameAux = name.getText().toString();
 
         if(cpfAux.isEmpty() || phoneAux.isEmpty() || nameAux.isEmpty()) {
-            cpfOrCpnj.setError("Esse campo é obrigatório");
-            phone.setError("Esse campo é obrigatório");
-            name.setError("Esse campo é obrigatório");
+            String error = getActivity().getResources().getString(R.string.campo_obrigatorio);
+
+            cpfOrCpnj.setError(error);
+            phone.setError(error);
+            name.setError(error);
 
             return false;
         }
@@ -199,7 +208,7 @@ public class ClientActionFragment extends Fragment {
         });
     }
 
-    private void insertClientInAPi(ClientModel client, View v) {
+    private void insertClientInApi(ClientModel client, View v) {
         String auth = sharedPreferences.getAuthentication();
 
         ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
@@ -213,6 +222,7 @@ public class ClientActionFragment extends Fragment {
                 if(response.isSuccessful()) {
                     ClientActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
+                    clearFields();
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
                     Log.e(TAG, response.toString());

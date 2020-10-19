@@ -1,7 +1,6 @@
 package com.hyperdrive.woodstock.models;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class BudgetModel implements Serializable {
 
@@ -10,23 +9,24 @@ public class BudgetModel implements Serializable {
     private String deliveryDay;
     private String creationDate;
     private String paymentMethod;
+    private Double total;
     private String status;
     private Long clientId;
     private AddressModel address;
-
-    // private List<BudgetItem> items;
 
     public BudgetModel() {
 
     }
 
     public BudgetModel(Long id, Integer deadline, String deliveryDay, String creationDate,
-                       String paymentMethod, String status, Long clientId, AddressModel address) {
+                       String paymentMethod, Double total, String status,
+                       Long clientId, AddressModel address) {
         this.id = id;
         this.deadline = deadline;
         this.deliveryDay = deliveryDay;
         this.creationDate = creationDate;
         this.paymentMethod = paymentMethod;
+        this.total = total;
         this.status = status;
         this.clientId = clientId;
         this.address = address;
@@ -60,16 +60,16 @@ public class BudgetModel implements Serializable {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public String getPaymentMethod() {
         return paymentMethod;
     }
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public Double getTotal() {
+        return total;
     }
 
     public String getStatus() {

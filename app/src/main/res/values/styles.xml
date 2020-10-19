@@ -29,6 +29,20 @@
         <item name="android:padding">15dp</item>
     </style>
 
+    <style name="CustomButton.Delete">
+        <item name="android:text">Deletar</item>
+        <item name="android:background">#B82833</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="CustomButton.Pdf">
+        <item name="android:text">Download PDF</item>
+        <item name="android:background">@color/backgroundColor</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="CustomButton.Home">
         <item name="android:layout_marginRight">30dp</item>
         <item name="android:layout_marginLeft">30dp</item>
@@ -42,8 +56,8 @@
     <style name="CustomLinearLayout.Form">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">15dp</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:gravity">bottom</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
@@ -52,9 +66,9 @@
     </style>
 
     <style name="CustomImageView.Form">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
 </resources>

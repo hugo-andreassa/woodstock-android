@@ -45,9 +45,10 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
 
         String environment = String.format(
                 Locale.forLanguageTag("BR"),
-                "Item %d - %s",
+                "Item %d - %s (%s)",
                 position + 1,
-                budgetItem.getEnvironment() == null ? "" : budgetItem.getEnvironment());
+                budgetItem.getEnvironment().isEmpty() ? "#" : budgetItem.getEnvironment(),
+                budgetItem.getStatus());
         holder.environment.setText(environment);
 
         holder.description.setText(budgetItem.getDescription());

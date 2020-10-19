@@ -40,17 +40,15 @@ public class BudgetItemActivity extends AppCompatActivity {
 
         mBudgetItemViewModel = new BudgetItemViewModel();
         mBudgetItemViewModel.getBudgetItems(budgetId).observe(this, budgetItems -> {
-            // mAdapter.updateData(budgetItems);
-
-            List<BudgetItemModel> items = new ArrayList<>();
-            for (int i=1; i<=20; i++) {
-                items.add(new BudgetItemModel(null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla rhoncus mauris, sit amet ornare massa euismod ac. Nam sodales nisi sit amet tellus tempus faucibus. Donec hendrerit justo eu velit eleifend mattis. Donec rhoncus ipsum lorem. In quis augue erat. Sed neque tellus, vehicula id felis ac, tincidunt gravida ante.",
-                    null, null, "Tittle", null,
-                    null));
-            }
-
-            mAdapter.updateData(items);
+            mAdapter.updateData(budgetItems);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mBudgetItemViewModel.getBudgetItems(budgetId);
     }
 
     private void setupFloatingActionButton() {
@@ -71,9 +69,6 @@ public class BudgetItemActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-
-        mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         mAdapter = new BudgetItemAdapter(budgetItems, budgetId);
         mRecyclerView.setAdapter(mAdapter);

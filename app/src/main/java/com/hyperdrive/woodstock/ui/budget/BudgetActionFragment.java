@@ -1,6 +1,5 @@
 package com.hyperdrive.woodstock.ui.budget;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -19,35 +18,25 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.BudgetService;
-import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.models.AddressModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
-import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.utils.DateUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -70,16 +59,16 @@ public class BudgetActionFragment extends Fragment {
     private BudgetModel budget;
     private Long clientId;
 
-    private EditText deadline;
-    private EditText deliveryDay;
-    private EditText paymentMethod;
+    private TextInputEditText deadline;
+    private TextInputEditText deliveryDay;
+    private TextInputEditText paymentMethod;
     private Spinner spinnerStatus;
-    private EditText cep;
-    private EditText street;
-    private EditText city;
+    private TextInputEditText cep;
+    private TextInputEditText street;
+    private TextInputEditText city;
     private Spinner spinnerEstados;
-    private EditText number;
-    private EditText comp;
+    private TextInputEditText number;
+    private TextInputEditText comp;
 
     private ProgressDialog progressDialog;
     private Preferences sharedPreferences;
@@ -122,6 +111,7 @@ public class BudgetActionFragment extends Fragment {
         setupEditTexts(v);
         if(budget != null) {
             loadFieldsInformation();
+            setupTotalField(v);
             setupDeleteButton(v);
             setupPdfButton(v);
         }
@@ -129,6 +119,17 @@ public class BudgetActionFragment extends Fragment {
         setupSaveButton(v);
 
         return v;
+    }
+
+    private void setupTotalField(View v) {
+        if(budget.getTotal() > 0) {
+            View linear = v.findViewById(R.id.budget_total_linear_layout);
+            linear.setVisibility(View.VISIBLE);
+
+            TextInputEditText total = v.findViewById(R.id.budget_total);
+            total.addTextChangedListener(Mask.moneyMask(total));
+            total.setText(String.valueOf(budget.getTotal() * 10));
+        }
     }
 
     private void setupPdfButton(View v) {
@@ -169,7 +170,7 @@ public class BudgetActionFragment extends Fragment {
     private void setupSpinnerDropdownStatus(View v) {
         spinnerStatus = v.findViewById(R.id.budget_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
-                R.array.status_array, android.R.layout.simple_spinner_item);
+                R.array.budget_status_array, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -234,6 +235,18 @@ public class BudgetActionFragment extends Fragment {
         comp.setText(budget.getAddress().getComp());
     }
 
+    private void clearFields() {
+        deadline.setText("");
+        deliveryDay.setText("");
+        paymentMethod.setText("");
+
+        cep.setText("");
+        street.setText("");
+        city.setText("");
+        number.setText("");
+        comp.setText("");
+    }
+
     private BudgetModel getValuesFromFields() {
 
         if(validateFields()) {
@@ -271,8 +284,10 @@ public class BudgetActionFragment extends Fragment {
         String paymentMethodAux = paymentMethod.getText().toString();
 
         if(deadlineAux.isEmpty() || paymentMethodAux.isEmpty()) {
-            deadline.setError("Esse campo é obrigatório");
-            paymentMethod.setError("Esse campo é obrigatório");
+            String erro = getActivity().getResources().getString(R.string.campo_obrigatorio);
+
+            deadline.setError(erro);
+            paymentMethod.setError(erro);
 
             return false;
         }
@@ -320,6 +335,7 @@ public class BudgetActionFragment extends Fragment {
                 if(response.isSuccessful()) {
                     BudgetActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
+                    clearFields();
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
                     Log.e(TAG, response.toString());
@@ -402,10 +418,12 @@ public class BudgetActionFragment extends Fragment {
 
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
-            // todo change the file location/name according to your needs
+
+            String clientName = getActivity().getTitle().toString().substring(11);
+
             File destinationFile = new File(
                     Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS), "Orçamento.pdf");
+                            Environment.DIRECTORY_DOWNLOADS),  "Orçamento " + clientName + ".pdf");
             Log.e(TAG, "OK");
 
             InputStream inputStream = null;

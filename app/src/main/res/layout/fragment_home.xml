@@ -11,38 +11,28 @@
 
     <Button
         android:id="@+id/menu_cliente"
-        android:text="Clientes"
+        android:text="@string/menu_client"
         style="@style/CustomButton.Home"
         android:drawableStart="@drawable/ic_menu_client" />
 
-    <!--
-    <Button
-        android:id="@+id/menu_orcamento"
-        android:text="Orçamentos"
-        style="@style/CustomButton.Home"
-        android:drawableLeft="@drawable/ic_menu_budget"
-        android:drawableStart="@drawable/ic_menu_budget"/>
-
     <Button
         android:id="@+id/menu_estoque"
-        android:text="Estoque"
+        android:text="@string/menu_estoque"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_estoque"
         android:drawableStart="@drawable/ic_menu_estoque"/>
 
     <Button
         android:id="@+id/menu_solicitacoes"
-        android:text="Solicitações de Compra"
+        android:text="@string/menu_solicitacoes"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_client"
         android:drawableStart="@drawable/ic_menu_solicitacao"/>
 
     <Button
         android:id="@+id/menu_despesas"
-        android:text="Despesas"
+        android:text="@string/menu_despesas"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_despesas"
         android:drawableStart="@drawable/ic_menu_despesas"/>
-    -->
-
 </LinearLayout>

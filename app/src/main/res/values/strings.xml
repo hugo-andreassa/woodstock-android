@@ -13,21 +13,44 @@
     <string name="menu_client">Clientes</string>
 
     // Client Form
-    <string name="hint_nome">Nome</string>
+    <string name="client_form_hint_name">Nome</string>
+    <string name="client_form_cpf_hint">CPF</string>
+    <string name="client_form_telefone_hint">Telefone</string>
+    <string name="client_form_email_hint">Email</string>
 
-    // DropDown Budget Form
+    <string name="salvar">Salvar</string>
+
+    <string name="campo_obrigatorio">Este campo é obrigatório</string>
+
+    <string name="budget_form_prazo_hint">Prazo de Entrega</string>
+    <string name="budget_form_data_entrega_hint">Data de Entrega</string>
+    <string name="budget_form_metodo_hint">Método de Pagamento</string>
+    <string name="budget_form_cep_hint">CEP</string>
+    <string name="budget_form_rua_hint">Rua</string>
+    <string name="budget_form_cidade_hint">Cidade</string>
+    <string name="budget_form_numero_hint">Número</string>
+    <string name="budget_form_comp_hint">Complemento</string>
     <string-array name="state_array">
         <item>São Paulo</item>
         <item>Rio de Janeiro</item>
     </string-array>
-
-    // DropDown Budget Form
-    <string-array name="status_array">
+    <string-array name="budget_status_array">
         <item>NEGOCIANDO</item>
         <item>FECHADO</item>
         <item>COMPLETO</item>
         <item>CANCELADO</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="budgetitem_form_descricao_hint">Descrição</string>
+    <string name="budgetitem_form_preco_hint">Preço</string>
+    <string name="budgetitem_form_ambiente_hint">Ambiente</string>
+    <string name="menu_estoque">Estoque</string>
+    <string name="menu_solicitacoes">Solicitações de Compra</string>
+    <string name="menu_despesas">Despesas</string>
+    <string-array name="budgetitem_status_array">
+        <item>PRODUZINDO</item>
+        <item>ESPERANDO</item>
+        <item>TERMINADO</item>
+    </string-array>
+
 </resources>

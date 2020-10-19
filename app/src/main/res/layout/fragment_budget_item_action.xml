@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/budgetitem_action_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/budget_action_fragment"
     android:background="?android:attr/windowBackground">
     <LinearLayout
         android:orientation="vertical"
@@ -15,83 +15,113 @@
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 android:src="@drawable/ic_description"
+                android:layout_gravity="center"
                 style="@style/CustomImageView.Form"/>
-            <EditText
-                android:id="@+id/budgetitem_description"
-                android:hint="Descrição"
-                android:lines="5"
-                android:maxLines="3"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/budgetitem_description_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"/>
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/budgetitem_description"
+                    android:hint="@string/budgetitem_form_descricao_hint"
+                    android:lines="5"
+                    android:maxLines="6"
+                    android:gravity="top|start"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:inputType="textMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 android:src="@drawable/ic_money"
-                style="@style/CustomImageView.Form"
-                />
-            <EditText
-                android:id="@+id/budgetitem_price"
-                android:hint="Preço"
-                android:autofillHints="Prazo de Entrega"
-                android:layout_width="match_parent"
+                style="@style/CustomImageView.Form"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/budgetitem_price_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
-        </LinearLayout>
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/budgetitem_price"
+                    android:hint="@string/budgetitem_form_preco_hint"
+                    android:inputType="numberDecimal"
+                    android:maxLength="15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            style="@style/CustomLinearLayout.Form"
-            android:gravity="center">
-                <Button
-                    android:id="@+id/budgetitem_quantity_less_button"
-                    android:text="-"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp" />
+            <Button
+                android:id="@+id/budgetitem_quantity_less_button"
+                android:text="-"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
 
-                <TextView
-                    android:id="@+id/budgetitem_quantity"
-                    android:text="1"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp" />
+            <TextView
+                android:id="@+id/budgetitem_quantity"
+                android:text="1"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
 
-                <Button
-                    android:id="@+id/budgetitem_quantity_more_button"
-                    android:text="+"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"/>
+            <Button
+                android:id="@+id/budgetitem_quantity_more_button"
+                android:text="+"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
         </LinearLayout>
 
         <LinearLayout
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 style="@style/CustomImageView.Form"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/budgetitem_environment_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/budgetitem_environment"
+                    android:hint="@string/budgetitem_form_ambiente_hint"
+                    android:inputType="textCapSentences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+            <ImageView
+                style="@style/CustomImageView.Form"/>
+
             <Spinner
-                android:id="@+id/budget_status"
+                android:id="@+id/budgetitem_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
         </LinearLayout>
 
         <Button
-            android:id="@+id/budget_save_button"
+            android:id="@+id/budgetitem_save_button"
             android:text="Salvar"
+            android:layout_marginTop="30dp"
             style="@style/CustomButton" />
 
         <Button
-            android:id="@+id/budget_delete_button"
-            android:text="Deletar"
+            android:id="@+id/budgetitem_delete_button"
             android:layout_marginTop="15dp"
-            android:background="@color/design_default_color_error"
-            style="@style/CustomButton"/>
-
-            <!-- android:visibility="gone" -->
-
+            style="@style/CustomButton.Delete"/>
     </LinearLayout>
 </ScrollView>
