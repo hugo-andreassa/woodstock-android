@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.Toast;
@@ -39,7 +41,8 @@ public class BudgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
-        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
+        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 2);
 
         Bundle bundle = getIntent().getExtras();
         clientId = bundle.getLong("clientId");
@@ -55,6 +58,13 @@ public class BudgetActivity extends AppCompatActivity {
         mBudgetViewModel.getBudgets(clientId).observe(this, budgets -> {
             mAdapter.updateData(budgets);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mBudgetViewModel.getBudgets(clientId);
     }
 
     private void setupFloatingActionButton() {

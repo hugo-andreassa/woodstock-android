@@ -12,6 +12,28 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/budget_total_linear_layout"
+            style="@style/CustomLinearLayout.Form"
+            android:visibility="gone">
+            <ImageView
+                android:src="@drawable/ic_money"
+                style="@style/CustomImageView.Form"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/budget_total_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/budget_total"
+                    android:hint="Total"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 android:src="@drawable/ic_time"
@@ -69,28 +91,6 @@
                     android:scrollbars="vertical"
                     android:singleLine="false"
                     android:inputType="textMultiLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/budget_total_linear_layout"
-            style="@style/CustomLinearLayout.Form"
-            android:visibility="gone">
-            <ImageView
-                android:src="@drawable/ic_money"
-                style="@style/CustomImageView.Form"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/budget_total_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/budget_total"
-                    android:hint="Total"
-                    android:focusable="false"
-                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>

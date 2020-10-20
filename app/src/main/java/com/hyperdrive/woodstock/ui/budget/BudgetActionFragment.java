@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.os.StrictMode;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -397,22 +398,17 @@ public class BudgetActionFragment extends Fragment {
     private void downloadPdfFromApi(View v) {
         String auth = sharedPreferences.getAuthentication();
 
+        Log.e(TAG, clientId + " - " + budget.getId() + " - "  + auth);
+
         BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
         Call<ResponseBody> call = budgetService.downloadPdf(1l, clientId, budget.getId(), auth);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+                    allowStrictMode();
                     SnackbarUtil.showSuccess((AppCompatActivity) v.getContext(), "Download em andamento...");
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-
-                            return null;
-                        }
-                    }.execute();
-
+                    boolean write = writeResponseBodyToDisk(response.body());
                 } else {
                     SnackbarUtil.showError((AppCompatActivity) v.getContext(), SERVER_ERROR);
                     Log.e(TAG, response.toString());
@@ -479,5 +475,10 @@ public class BudgetActionFragment extends Fragment {
             Log.e(TAG, e.getMessage());
             return false;
         }
+    }
+
+    private void allowStrictMode() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 }
