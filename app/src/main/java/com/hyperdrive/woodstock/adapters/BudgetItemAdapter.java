@@ -1,5 +1,6 @@
 package com.hyperdrive.woodstock.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
 import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
 import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
+import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
+import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -62,7 +65,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
         });
 
         holder.cutPlanButton.setOnClickListener((v) -> {
-            Toast.makeText(v.getContext(), "Cut Plan Button Clicked", Toast.LENGTH_LONG).show();
+            callCuttingPlanActivity(v, budgetItem.getId());
         });
     }
 
@@ -80,6 +83,13 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
         transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void callCuttingPlanActivity(View v, Long id) {
+            Intent intent = new Intent(v.getContext(), CuttingPlanActivity.class);
+            intent.putExtra("budgetItemId", id);
+
+            v.getContext().startActivity(intent);
     }
 
     public void updateData(List<BudgetItemModel> budgetItems) {
