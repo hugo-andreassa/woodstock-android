@@ -20,10 +20,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.BudgetItemService;
-import com.hyperdrive.woodstock.api.services.BudgetService;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.budget.BudgetActivity;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -290,7 +288,7 @@ public class BudgetItemActionFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         builder.setMessage("Deseja mesmo excluir este Item do Orçamento?")
                 .setPositiveButton("Sim", (dialog, id) -> {
-                    deleteBudgetItemFromApi(mBudgetItem.getId(), v);
+                    deleteBudgetItemFromApi(mBudgetItem.getId());
                 })
                 .setNegativeButton("Cancelar", (dialog, id) -> {
                     dialog.dismiss();
@@ -300,7 +298,7 @@ public class BudgetItemActionFragment extends Fragment {
         dialog.show();
     }
 
-    private void deleteBudgetItemFromApi(Long id, View v) {
+    private void deleteBudgetItemFromApi(Long id) {
         String auth = sharedPreferences.getAuthentication();
 
         BudgetItemService budgetItemService = RetrofitConfig.getRetrofitInstance().create(BudgetItemService.class);
@@ -314,7 +312,7 @@ public class BudgetItemActionFragment extends Fragment {
                     BudgetItemActivity.updateRecyclerView();
                     getActivity().getSupportFragmentManager().popBackStackImmediate();
                 } else {
-                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
+                    SnackbarUtil.showError(getActivity(), SERVER_ERROR);
                     Log.e(TAG, response.toString());
                 }
             }
@@ -327,6 +325,4 @@ public class BudgetItemActionFragment extends Fragment {
             }
         });
     }
-
-
 }

@@ -1,5 +1,7 @@
 package com.hyperdrive.woodstock.ui.cuttingplan;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -10,20 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.BudgetItemService;
 import com.hyperdrive.woodstock.api.services.CuttingPlanService;
-import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
-import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,10 +85,22 @@ public class CuttingPlanActionFragment extends Fragment {
 
         setupEditTexts(view);
         setupIncrementButtons(view);
-        
         setupSaveButton(view);
 
+        if(mCuttingPlan != null) {
+            loadFieldsInformation(view);
+            setupDeleteButton(view);
+        }
+
         return view;
+    }
+
+    private void setupDeleteButton(View view) {
+        Button button = view.findViewById(R.id.cuttingplan_delete_button);
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(v -> {
+            deleteCuttingPlan(view);
+        });
     }
 
     private void setupSaveButton(View view) {
@@ -100,12 +111,25 @@ public class CuttingPlanActionFragment extends Fragment {
 
             if (cuttingPlan != null) {
                 if(mCuttingPlan != null) {
-                    // updateCuttingPlanInApi(cuttingPlan, view);
+                    cuttingPlan.setId(mCuttingPlan.getId());
+
+                    progressDialog.show();
+                    updateCuttingPlanInApi(cuttingPlan, view);
                 } else {
+                    progressDialog.show();
                     insertCuttingPlanInApi(cuttingPlan, view);
                 }
             }
         });
+    }
+
+    private void loadFieldsInformation(View view) {
+        height.setText(String.format(Locale.getDefault(), "%.0f", mCuttingPlan.getHeight()));
+        width.setText(String.format(Locale.getDefault(), "%.0f", mCuttingPlan.getWidth()));
+        comment.setText(mCuttingPlan.getComment());
+
+        quantity = mCuttingPlan.getQuantity();
+        displayQuantity(mCuttingPlan.getQuantity(), view);
     }
 
     private CuttingPlanModel getValuesFromFields() {
@@ -203,6 +227,76 @@ public class CuttingPlanActionFragment extends Fragment {
                 progressDialog.dismiss();
                 SnackbarUtil.showError(getActivity(), SERVER_ERROR);
                 Log.e(TAG, cuttingPlan.toString());
+            }
+        });
+    }
+
+
+    private void updateCuttingPlanInApi(CuttingPlanModel cuttingPlan, View view) {
+        String auth = sharedPreferences.getAuthentication();
+
+        CuttingPlanService cuttingPlanService = RetrofitConfig.getRetrofitInstance().create(CuttingPlanService.class);
+        Call<Void> call = cuttingPlanService.update(cuttingPlan.getId(), cuttingPlan, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
+                if(response.isSuccessful()) {
+                    CuttingPlanActivity.updateRecyclerView();
+                    SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
+                } else {
+                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
+                    Log.e(TAG, response.toString());
+                    Log.e(TAG, cuttingPlan.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+            }
+        });
+    }
+
+    private void deleteCuttingPlan(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setMessage("Deseja mesmo excluir este Plano de Corte?")
+                .setPositiveButton("Sim", (dialog, id) -> {
+                    deleteBudgetItemFromApi(mCuttingPlan.getId());
+                })
+                .setNegativeButton("Cancelar", (dialog, id) -> {
+                    dialog.dismiss();
+                });
+
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteBudgetItemFromApi(Long id) {
+        String auth = sharedPreferences.getAuthentication();
+
+        CuttingPlanService cuttingPlanService = RetrofitConfig.getRetrofitInstance().create(CuttingPlanService.class);
+        Call<Void> call = cuttingPlanService.delete(id, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                progressDialog.dismiss();
+                if(response.isSuccessful()) {
+                    CuttingPlanActivity.updateRecyclerView();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
+                } else {
+                    SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+                Log.e(TAG, id.toString());
             }
         });
     }

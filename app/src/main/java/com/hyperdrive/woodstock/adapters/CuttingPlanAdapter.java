@@ -5,15 +5,21 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.CuttingPlanHolder;
+import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
+import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
+import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActionFragment;
 
 import java.util.List;
 import java.util.Locale;
@@ -71,13 +77,25 @@ public class CuttingPlanAdapter extends RecyclerView.Adapter<CuttingPlanHolder> 
         holder.pieceDesign.setLayoutParams(layoutParams);
 
         holder.moreButton.setOnClickListener((v) -> {
-            Toast.makeText(v.getContext(), "Socorro...", Toast.LENGTH_LONG).show();
+            callFragment(v, cuttingPlan);
         });
     }
 
     @Override
     public int getItemCount() {
         return mCuttingPlans != null ? mCuttingPlans.size() : 0;
+    }
+
+    private void callFragment(View v, CuttingPlanModel cuttingPlan) {
+        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+
+        CuttingPlanActionFragment cuttingPlanActionFragment =
+                CuttingPlanActionFragment.newInstance(budgetItemId, cuttingPlan);
+
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.cuttingplan_fragment_layout, cuttingPlanActionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private double convertCentimetersToInches(Double value) {
