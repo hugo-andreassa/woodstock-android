@@ -1,8 +1,10 @@
 package com.hyperdrive.woodstock.ui.cuttingplan;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,47 +13,48 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.CuttingPlanAdapter;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
+import com.hyperdrive.woodstock.viewmodel.BudgetItemViewModel;
+import com.hyperdrive.woodstock.viewmodel.CuttingPlanViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CuttingPlanActivity extends AppCompatActivity {
 
-    private static Long budgetItemId;
+    private String TAG = "CUT_PLAN_ACTIVITY";
+
+    private static Long mBudgetItemId;
     private CuttingPlanAdapter mAdapter;
+    private static CuttingPlanViewModel mCuttingPlanViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cutting_plan);
 
-        List<CuttingPlanModel> cuttingPlans = new ArrayList<>();
-
-        // Altura - Largura
-        cuttingPlans.add(new CuttingPlanModel(1L, 80.0, 64.0,
-                3, "", null));
-        cuttingPlans.add(new CuttingPlanModel(2L, 45.0, 150.0,
-                3, "", null));
-        cuttingPlans.add(new CuttingPlanModel(3L, 80.0, 42.0,
-                3, "", null));
-        cuttingPlans.add(new CuttingPlanModel(4L, 50.0, 100.0,
-                3, "", null));
-        cuttingPlans.add(new CuttingPlanModel(4L, 183.0, 275.0,
-                3, "", null));
+        Bundle bundle = getIntent().getExtras();
+        mBudgetItemId = bundle.getLong("budgetItemId");
+        Log.e(TAG, mBudgetItemId.toString());
 
         setupFloatingActionButton();
-        setupRecyclerView(cuttingPlans);
+        setupRecyclerView(new ArrayList<>());
+
+        mCuttingPlanViewModel = new CuttingPlanViewModel();
+        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId).observe(this, cuttingPlans -> {
+            mAdapter.updateData(cuttingPlans);
+        });
     }
 
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_cuttingplan);
         fab.setOnClickListener(v -> {
-            /* BudgetItemActionFragment budgetItemActionFragment = BudgetItemActionFragment.newInstance(budgetItemId, null);
+            CuttingPlanActionFragment cuttingPlanActionFragment =
+                    CuttingPlanActionFragment.newInstance(mBudgetItemId, null);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);
+            transaction.replace(R.id.cuttingplan_fragment_layout, cuttingPlanActionFragment);
             transaction.addToBackStack(null);
-            transaction.commit(); */
+            transaction.commit();
         });
     }
 
@@ -59,13 +62,14 @@ public class CuttingPlanActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = findViewById(R.id.list_cuttingplan);
         mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new CuttingPlanAdapter(cuttingPlans, budgetItemId, this);
+        mAdapter = new CuttingPlanAdapter(cuttingPlans, mBudgetItemId, this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public static void updateRecyclerView() {
+        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId);
     }
 }

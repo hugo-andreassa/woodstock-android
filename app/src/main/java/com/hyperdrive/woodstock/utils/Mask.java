@@ -103,6 +103,7 @@ public abstract class Mask {
                 .replaceAll("[(]", "")
                 .replaceAll("[:]", "")
                 .replaceAll("[)]", "")
+                .replaceAll("[,]", "")
                 .replaceAll("[ ]","");
     }
 

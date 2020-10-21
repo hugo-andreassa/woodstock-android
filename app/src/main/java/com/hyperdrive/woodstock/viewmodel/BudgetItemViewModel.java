@@ -48,7 +48,7 @@ public class BudgetItemViewModel  extends ViewModel {
 
             @Override
             public void onFailure(Call<List<BudgetItemModel>> call, Throwable t) {
-                Log.e(TAG, "onFailure findAll Clients");
+                Log.e(TAG, "onFailure findAll Budget Items");
             }
         });
 

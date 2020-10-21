@@ -140,17 +140,17 @@ public class BudgetItemActionFragment extends Fragment {
         });
     }
 
+    private void displayQuantity(int number, View view) {
+        TextView quantityTextView = view.findViewById(R.id.budgetitem_quantity);
+        quantityTextView.setText(String.valueOf(number));
+    }
+
     private void setupDeleteButton(View v) {
         Button button = v.findViewById(R.id.budgetitem_delete_button);
         button.setVisibility(View.VISIBLE);
         button.setOnClickListener(view -> {
             deleteBudgetItem(v);
         });
-    }
-
-    private void displayQuantity(int number, View view) {
-        TextView quantityTextView = view.findViewById(R.id.budgetitem_quantity);
-        quantityTextView.setText(String.valueOf(number));
     }
 
     private void setupSaveButton(View v) {

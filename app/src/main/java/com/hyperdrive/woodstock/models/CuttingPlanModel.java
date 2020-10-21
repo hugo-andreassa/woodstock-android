@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.models;
 
-public class CuttingPlanModel {
+import java.io.Serializable;
+
+public class CuttingPlanModel implements Serializable {
 
     private Long id;
     private Double height;

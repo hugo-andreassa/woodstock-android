@@ -13,7 +13,7 @@ public class CuttingPlanHolder extends RecyclerView.ViewHolder {
 
     public TextView quantity;
     public TextView measures;
-    public TextView description;
+    public TextView comment;
     public View pieceDesign;
     public ImageButton moreButton;
 
@@ -22,7 +22,7 @@ public class CuttingPlanHolder extends RecyclerView.ViewHolder {
 
         quantity = itemView.findViewById(R.id.cuttingplan_list_quantity);
         measures = itemView.findViewById(R.id.cuttingplan_list_measures);
-        description = itemView.findViewById(R.id.cuttingplan_list_description);
+        comment = itemView.findViewById(R.id.cuttingplan_list_comment);
         pieceDesign =itemView.findViewById(R.id.cuttingplan_view);
         moreButton = itemView.findViewById(R.id.cuttingplan_list_more_button);
     }

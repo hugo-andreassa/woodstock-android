@@ -47,10 +47,10 @@ public class CuttingPlanAdapter extends RecyclerView.Adapter<CuttingPlanHolder> 
                 position+1, cuttingPlan.getQuantity()
         ));
         holder.measures.setText(String.format(Locale.getDefault(),
-                "Altura: %.2f X Largura: %.2f",
+                "Altura: %.0f X Largura: %.0f",
                 cuttingPlan.getHeight(), cuttingPlan.getWidth()
         ));
-        holder.description.setText(cuttingPlan.getComment());
+        holder.comment.setText(cuttingPlan.getComment());
 
         // Altura
         double largura = cuttingPlan.getHeight();
@@ -96,6 +96,12 @@ public class CuttingPlanAdapter extends RecyclerView.Adapter<CuttingPlanHolder> 
         double dp = Math.round(px / (mDisplayMetric.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
         return (int) Math.round(dp / 50.0);
+    }
+
+    public void updateData(List<CuttingPlanModel> cuttingPlans) {
+        this.mCuttingPlans.clear();
+        this.mCuttingPlans.addAll(cuttingPlans);
+        notifyDataSetChanged();
     }
 }
 

@@ -40,7 +40,7 @@
                     android:layout_height="match_parent"/>
 
                 <TextView
-                    android:id="@+id/cuttingplan_list_description"
+                    android:id="@+id/cuttingplan_list_comment"
                     android:text=""
                     android:textAlignment="inherit"
                     android:layout_width="match_parent"
