@@ -224,7 +224,12 @@ public class ProjectActionFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
-                    uploadFile(project.getId(), auth, OK_REQUEST_UPDATE);
+                    if(photoURI != null) {
+                        uploadFile(project.getId(), auth, OK_REQUEST_UPDATE);
+                    } else {
+                        ProjectActivity.updateRecyclerView();
+                        SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
+                    }
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
                     Log.e(TAG, project.toString());
