@@ -7,7 +7,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.CuttingPlanHolder;
-import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
-import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
 import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActionFragment;
 
 import java.util.List;
@@ -53,7 +50,7 @@ public class CuttingPlanAdapter extends RecyclerView.Adapter<CuttingPlanHolder> 
                 position+1, cuttingPlan.getQuantity()
         ));
         holder.measures.setText(String.format(Locale.getDefault(),
-                "Altura: %.0f X Largura: %.0f",
+                "Altura: %.0fcm X Largura: %.0fcm",
                 cuttingPlan.getHeight(), cuttingPlan.getWidth()
         ));
         holder.comment.setText(cuttingPlan.getComment());

@@ -18,6 +18,7 @@
     <Button
         android:id="@+id/menu_estoque"
         android:text="@string/menu_estoque"
+        android:enabled="false"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_estoque"
         android:drawableStart="@drawable/ic_menu_estoque"/>
@@ -25,6 +26,7 @@
     <Button
         android:id="@+id/menu_solicitacoes"
         android:text="@string/menu_solicitacoes"
+        android:enabled="false"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_client"
         android:drawableStart="@drawable/ic_menu_solicitacao"/>
@@ -32,6 +34,7 @@
     <Button
         android:id="@+id/menu_despesas"
         android:text="@string/menu_despesas"
+        android:enabled="false"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_despesas"
         android:drawableStart="@drawable/ic_menu_despesas"/>

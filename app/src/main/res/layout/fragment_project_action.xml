@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/project_action_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
+    tools:context=".ui.project.ProjectActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/project_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray"/>
+
+        <ImageButton
+            android:id="@+id/project_camera_button"
+            android:src="@drawable/ic_camera"
+            android:layout_marginTop="-50dp"
+            android:layout_gravity="center"
+            android:background="?selectableItemBackground"
+            style="@style/CustomImageButton"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:padding="15dp">
+            <LinearLayout
+                style="@style/CustomLinearLayout.Form">
+                <ImageView
+                    android:src="@drawable/ic_description"
+                    android:layout_gravity="center"
+                    style="@style/CustomImageView.Form"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/project_comment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="70"
+                    app:endIconMode="clear_text">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/project_comment"
+                        android:hint="Comentário"
+                        android:lines="2"
+                        android:maxLength="70"
+                        android:gravity="top|start"
+                        android:scrollbars="vertical"
+                        android:singleLine="false"
+                        android:inputType="textMultiLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/project_save_button"
+                android:text="Salvar"
+                android:layout_marginTop="30dp"
+                style="@style/CustomButton" />
+
+            <Button
+                android:id="@+id/project_delete_button"
+                android:layout_marginTop="15dp"
+                style="@style/CustomButton.Delete"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

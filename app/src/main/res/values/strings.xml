@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Woodstock</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Hugo Andreassa</string>
+    <string name="nav_header_subtitle">hugo.andreassa@gmail.com</string>
     <string name="action_settings">Settings</string>
-    <string name="first_fragment_label">First Fragment</string>
 
     // Menu tittle items
     <string name="menu_home">Home</string>
     <string name="menu_client">Clientes</string>
+    <string name="menu_estoque">Estoque</string>
+    <string name="menu_solicitacoes">Solicitações de Compra</string>
+    <string name="menu_despesas">Despesas</string>
 
     // Client Form
     <string name="client_form_hint_name">Nome</string>
@@ -44,15 +44,10 @@
     <string name="budgetitem_form_descricao_hint">Descrição</string>
     <string name="budgetitem_form_preco_hint">Preço</string>
     <string name="budgetitem_form_ambiente_hint">Ambiente</string>
-    <string name="menu_estoque">Estoque</string>
-    <string name="menu_solicitacoes">Solicitações de Compra</string>
-    <string name="menu_despesas">Despesas</string>
     <string-array name="budgetitem_status_array">
         <item>PRODUZINDO</item>
         <item>ESPERANDO</item>
         <item>TERMINADO</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

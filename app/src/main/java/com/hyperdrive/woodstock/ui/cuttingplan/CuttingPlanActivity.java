@@ -5,7 +5,6 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +12,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.CuttingPlanAdapter;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
-import com.hyperdrive.woodstock.viewmodel.BudgetItemViewModel;
 import com.hyperdrive.woodstock.viewmodel.CuttingPlanViewModel;
 
 import java.util.ArrayList;
