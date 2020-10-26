@@ -30,19 +30,24 @@
         </provider>
         <activity
             android:name=".ui.project.ProjectActivity"
-            android:label="Projetos"/>
+            android:label="Projetos"
+            android:parentActivityName=".ui.client.ClientActivity"/>
         <activity
             android:name=".ui.cuttingplan.CuttingPlanActivity"
-            android:label="Plano de Corte" />
+            android:label="Plano de Corte"
+            android:parentActivityName=".ui.client.ClientActivity"/>
         <activity
             android:name=".ui.budgetitem.BudgetItemActivity"
-            android:label="Itens do Orçamento" />
+            android:label="Itens do Orçamento"
+            android:parentActivityName=".ui.client.ClientActivity"/>
         <activity
             android:name=".ui.budget.BudgetActivity"
-            android:label="Orçamentos" />
+            android:label="Orçamentos"
+            android:parentActivityName=".ui.client.ClientActivity"/>
         <activity
             android:name=".ui.client.ClientActivity"
-            android:label="Clientes" />
+            android:label="Clientes"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

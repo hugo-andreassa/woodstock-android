@@ -35,6 +35,7 @@ public class ProjectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         askForPermission(Manifest.permission.CAMERA, CAMERA_REQUEST);
 

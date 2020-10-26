@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Woodstock</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="nav_header_title">Hugo Andreassa</string>
-    <string name="nav_header_subtitle">hugo.andreassa@gmail.com</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configurações</string>
 
     // Menu tittle items
     <string name="menu_home">Home</string>
@@ -49,5 +47,7 @@
         <item>ESPERANDO</item>
         <item>TERMINADO</item>
     </string-array>
+
+    <string name="menu_user_action">Usuário</string>
 
 </resources>

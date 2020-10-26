@@ -40,6 +40,7 @@ public class BudgetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
         askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 2);

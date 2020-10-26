@@ -13,7 +13,7 @@
         android:id="@+id/menu_cliente"
         android:text="@string/menu_client"
         style="@style/CustomButton.Home"
-        android:drawableStart="@drawable/ic_menu_client" />
+        android:drawableStart="@drawable/ic_menu_cliente" />
 
     <Button
         android:id="@+id/menu_estoque"
@@ -28,7 +28,7 @@
         android:text="@string/menu_solicitacoes"
         android:enabled="false"
         style="@style/CustomButton.Home"
-        android:drawableLeft="@drawable/ic_menu_client"
+        android:drawableLeft="@drawable/ic_menu_user_action"
         android:drawableStart="@drawable/ic_menu_solicitacao"/>
 
     <Button
