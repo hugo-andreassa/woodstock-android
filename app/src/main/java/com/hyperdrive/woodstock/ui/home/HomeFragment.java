@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.ui.client.ClientActivity;
+import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActivity;
 
 import java.util.Objects;
 
@@ -30,7 +31,6 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         setupClienteMenuButton(view);
-        setupOrcamentoMenuButton(view);
         setupEstoqueMenuButton(view);
         setupSolicitacoesMenuButton(view);
         setupDespesaMenuButton(view);
@@ -39,6 +39,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupDespesaMenuButton(View view) {
+        Button button = view.findViewById(R.id.menu_despesas);
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeFragment.this.requireActivity().getApplication(),
+                    OperatingExpenseActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupSolicitacoesMenuButton(View view) {
@@ -47,17 +53,11 @@ public class HomeFragment extends Fragment {
     private void setupEstoqueMenuButton(View view) {
     }
 
-    private void setupOrcamentoMenuButton(View view) {
-    }
-
     private void setupClienteMenuButton(View view) {
         Button button = view.findViewById(R.id.menu_cliente);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeFragment.this.requireActivity().getApplication(), ClientActivity.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeFragment.this.requireActivity().getApplication(), ClientActivity.class);
+            startActivity(intent);
         });
     }
 }

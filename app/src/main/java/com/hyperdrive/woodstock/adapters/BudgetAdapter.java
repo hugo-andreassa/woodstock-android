@@ -45,9 +45,11 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
 
         String status = String.format(
                 Locale.forLanguageTag("BR"),
-                "Orçamento %d - %s",
-                position + 1, budget.getStatus());
-        holder.status.setText(status);
+                "Orçamento %d",
+                position + 1);
+        holder.number.setText(status);
+
+        holder.status.setText(budget.getStatus());
 
         String date = DateUtil.parseDateFromUtc(
                 budget.getCreationDate(),

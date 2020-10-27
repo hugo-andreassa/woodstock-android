@@ -88,9 +88,6 @@ public class BudgetActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
         // specify an adapter
         mAdapter = new BudgetAdapter(budgets, clientId);
         mRecyclerView.setAdapter(mAdapter);

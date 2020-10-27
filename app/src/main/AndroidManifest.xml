@@ -19,6 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.operatingexpense.OperatingExpenseActivity"
+            android:label="Despesas"
+            android:parentActivityName=".MainActivity"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -28,26 +33,27 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ui.project.ProjectActivity"
             android:label="Projetos"
-            android:parentActivityName=".ui.client.ClientActivity"/>
+            android:parentActivityName=".ui.client.ClientActivity" />
         <activity
             android:name=".ui.cuttingplan.CuttingPlanActivity"
             android:label="Plano de Corte"
-            android:parentActivityName=".ui.client.ClientActivity"/>
+            android:parentActivityName=".ui.client.ClientActivity" />
         <activity
             android:name=".ui.budgetitem.BudgetItemActivity"
             android:label="Itens do Orçamento"
-            android:parentActivityName=".ui.client.ClientActivity"/>
+            android:parentActivityName=".ui.client.ClientActivity" />
         <activity
             android:name=".ui.budget.BudgetActivity"
             android:label="Orçamentos"
-            android:parentActivityName=".ui.client.ClientActivity"/>
+            android:parentActivityName=".ui.client.ClientActivity" />
         <activity
             android:name=".ui.client.ClientActivity"
             android:label="Clientes"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

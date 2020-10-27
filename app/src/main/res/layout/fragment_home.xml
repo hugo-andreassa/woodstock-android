@@ -34,7 +34,6 @@
     <Button
         android:id="@+id/menu_despesas"
         android:text="@string/menu_despesas"
-        android:enabled="false"
         style="@style/CustomButton.Home"
         android:drawableLeft="@drawable/ic_menu_despesas"
         android:drawableStart="@drawable/ic_menu_despesas"/>
