@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/budgetitem_action_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,12 +23,15 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/budgetitem_description_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="170"
+                app:endIconMode="clear_text">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budgetitem_description"
                     android:hint="@string/budgetitem_form_descricao_hint"
-                    android:lines="5"
-                    android:maxLines="6"
+                    android:lines="4"
+                    android:maxLength="170"
                     android:gravity="top|start"
                     android:scrollbars="vertical"
                     android:singleLine="false"
@@ -94,6 +98,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budgetitem_environment"
                     android:hint="@string/budgetitem_form_ambiente_hint"
+                    android:maxLength="30"
                     android:inputType="textCapSentences"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

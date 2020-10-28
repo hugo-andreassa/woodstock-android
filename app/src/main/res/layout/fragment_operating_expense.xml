@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/client_action_fragment"
     android:background="?android:attr/windowBackground"
     tools:context=".ui.operatingexpense.OperatingExpenseActivity">
@@ -15,7 +16,7 @@
         <LinearLayout
             style="@style/CustomLinearLayout.Form">
             <ImageView
-                android:src="@drawable/ic_client"
+                android:src="@drawable/ic_despesas"
                 style="@style/CustomImageView.Form"/>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -25,20 +26,81 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/operating_name"
                     android:hint="Nome da Despesa"
+                    android:maxLength="30"
                     android:inputType="textCapSentences"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_money"
+                style="@style/CustomImageView.Form"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/operating_value_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/operating_value"
+                    android:hint="Valor da Despesa"
+                    android:maxLength="15"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                android:src="@drawable/ic_description"
+                android:layout_gravity="center"
+                style="@style/CustomImageView.Form"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/operating_description_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="70"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/operating_description"
+                    android:hint="Descrição"
+                    android:lines="2"
+                    android:maxLength="70"
+                    android:gravity="top|start"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:inputType="textMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"/>
+            <Spinner
+                android:id="@+id/operating_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+
         <Button
-            android:id="@+id/client_salvar_button"
+            android:id="@+id/operating_salvar_button"
             android:text="@string/salvar"
             android:layout_marginTop="40dp"
             style="@style/CustomButton"/>
 
         <Button
-            android:id="@+id/client_deletar_button"
+            android:id="@+id/operating_deletar_button"
             android:layout_marginTop="15dp"
             style="@style/CustomButton.Delete"/>
     </LinearLayout>

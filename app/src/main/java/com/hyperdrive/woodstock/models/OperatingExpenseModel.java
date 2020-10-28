@@ -84,4 +84,17 @@ public class OperatingExpenseModel implements Serializable {
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
+
+    @Override
+    public String toString() {
+        return "OperatingExpenseModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", value=" + value +
+                ", creationDate='" + creationDate + '\'' +
+                ", type='" + type + '\'' +
+                ", companyId=" + companyId +
+                '}';
+    }
 }

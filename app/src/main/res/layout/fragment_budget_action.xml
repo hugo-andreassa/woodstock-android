@@ -48,6 +48,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_deadline"
                     android:hint="@string/budget_form_prazo_hint"
+                    android:maxLength="3"
                     android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -144,6 +145,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_street"
                     android:hint="@string/budget_form_rua_hint"
+                    android:maxLength="40"
                     android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -163,6 +165,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_city"
                     android:hint="@string/budget_form_cidade_hint"
+                    android:maxLength="40"
                     android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -189,6 +192,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_number"
                     android:hint="@string/budget_form_numero_hint"
+                    android:maxLength="10"
                     android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -202,7 +206,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_comp"
                     android:hint="@string/budget_form_comp_hint"
-                    android:inputType="number"
+                    android:maxLength="10"
+                    android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>

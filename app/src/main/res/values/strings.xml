@@ -43,11 +43,21 @@
     <string name="budgetitem_form_preco_hint">Preço</string>
     <string name="budgetitem_form_ambiente_hint">Ambiente</string>
     <string-array name="budgetitem_status_array">
-        <item>PRODUZINDO</item>
         <item>ESPERANDO</item>
+        <item>PRODUZINDO</item>
         <item>TERMINADO</item>
     </string-array>
 
     <string name="menu_user_action">Usuário</string>
+
+    <string-array name="operating_type_array">
+        <item>DESPESAS COM VEÍCULO</item>
+        <item>MANUTENÇÃO</item>
+        <item>SUPRIMENTOS</item>
+        <item>CONTAS</item>
+        <item>DESPESAS COM ESCRITÓRIO</item>
+        <item>ALUGUEL</item>
+        <item>SALÁRIO</item>
+    </string-array>
 
 </resources>

@@ -11,6 +11,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.OperatingExpenseAdapter;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
+import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.viewmodel.OperatingExpenseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,9 @@ import java.util.List;
 public class OperatingExpenseActivity extends AppCompatActivity {
 
     private static Long mCompanyId;
+    private static String mAuth;
     private OperatingExpenseAdapter mAdapter;
+    private static OperatingExpenseViewModel mOperatingExpenseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,19 +30,16 @@ public class OperatingExpenseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_operating_expense);
 
         mCompanyId = 1L;
-
-        List<OperatingExpenseModel> operatingExpenses = new ArrayList<>();
-        operatingExpenses.add(new OperatingExpenseModel(null, "Despesa com Gasolina",
-                "", 221.42, "2020-10-27T17:21:52Z", "", 1L));
-        operatingExpenses.add(new OperatingExpenseModel(null, "Conserto da Coladeira",
-                "", 566.70, "2020-10-27T17:21:52Z", "", 1L));
-        operatingExpenses.add(new OperatingExpenseModel(null, "Conta de Luz",
-                "", 340.83, "2020-10-27T17:21:52Z", "", 1L));
-        operatingExpenses.add(new OperatingExpenseModel(null, "Refil de água",
-                "", 15.0, "2020-10-27T17:21:52Z", "", 1L));
+        mAuth = new Preferences(getApplicationContext()).getAuthentication();
 
         setupFloatingActionButton();
-        setupRecyclerView(operatingExpenses);
+        setupRecyclerView(new ArrayList<>());
+
+        mOperatingExpenseViewModel = new OperatingExpenseViewModel();
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, mAuth).observe(
+                this, operatingExpenses -> {
+                    mAdapter.updateData(operatingExpenses);
+        });
     }
 
     private void setupFloatingActionButton() {
@@ -63,5 +64,9 @@ public class OperatingExpenseActivity extends AppCompatActivity {
 
         mAdapter = new OperatingExpenseAdapter(operatingExpenses, mCompanyId);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public static void updateRecyclerView() {
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, mAuth);
     }
 }

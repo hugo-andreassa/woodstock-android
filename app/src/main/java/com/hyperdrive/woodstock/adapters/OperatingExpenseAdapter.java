@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.OperatingExpenseHolder;
+import com.hyperdrive.woodstock.models.CuttingPlanModel;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
 import com.hyperdrive.woodstock.utils.DateUtil;
 
@@ -58,5 +59,11 @@ public class OperatingExpenseAdapter extends RecyclerView.Adapter<OperatingExpen
     @Override
     public int getItemCount() {
         return mOperatingExpenses != null ? mOperatingExpenses.size() : 0;
+    }
+
+    public void updateData(List<OperatingExpenseModel> operatingExpenses) {
+        this.mOperatingExpenses.clear();
+        this.mOperatingExpenses.addAll(operatingExpenses);
+        notifyDataSetChanged();
     }
 }
