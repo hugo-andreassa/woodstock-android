@@ -1,5 +1,7 @@
 package com.hyperdrive.woodstock.ui.operatingexpense;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -16,12 +18,16 @@ import android.widget.Spinner;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
+import com.hyperdrive.woodstock.api.services.BudgetItemService;
 import com.hyperdrive.woodstock.api.services.OperatingExpenseService;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
 import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +41,7 @@ public class OperatingExpenseActionFragment extends Fragment {
     private final String BAD_REQUEST_UPDATE = "Erro ao atualizar os dados da Despesa";
     private final String OK_REQUEST_UPDATE = "Despesa atualizada com sucesso";
     private final String BAD_REQUEST_INSERT = "Erro ao inserir os dados da Despesa";
-    private final String OK_REQUEST_INSERT = "Despesa inserido com sucesso";
+    private final String OK_REQUEST_INSERT = "Despesa inserida com sucesso";
 
     private static final String ARG_PARAM1 = "companyId";
     private static final String ARG_PARAM2 = "operatingExpense";
@@ -85,7 +91,27 @@ public class OperatingExpenseActionFragment extends Fragment {
         setupEditTexts(view);
         setupSaveButton(view);
 
+        if(mOperatingExpense != null) {
+            loadFieldsInformation(view);
+            setupDeleteButton(view);
+        }
+
         return view;
+    }
+
+    private void setupDeleteButton(View view) {
+        Button deleteButton = view.findViewById(R.id.operating_deletar_button);
+        deleteButton.setVisibility(View.VISIBLE);
+
+        deleteButton.setOnClickListener(v -> {
+            deleteOperatingExpense(view);
+        });
+    }
+
+    private void loadFieldsInformation(View view) {
+        name.setText(mOperatingExpense.getName());
+        value.setText(mOperatingExpense.getValue().toString());
+        description.setText(mOperatingExpense.getDescription());
     }
 
     private void setupSaveButton(View view) {
@@ -99,7 +125,7 @@ public class OperatingExpenseActionFragment extends Fragment {
             if(mOperatingExpense != null) {
                 operatingExpense.setId(mOperatingExpense.getId());
 
-                // Atualiza
+                updateOperatingExpenseInApi(operatingExpense, v);
             } else {
                 insertOperatingExpenseInApi(operatingExpense, v);
             }
@@ -107,16 +133,23 @@ public class OperatingExpenseActionFragment extends Fragment {
     }
 
     private OperatingExpenseModel getValuesFromFields() {
-
         if(validateFields()) {
             OperatingExpenseModel operatingExpense = new OperatingExpenseModel();
             operatingExpense.setCompanyId(mCompanyId);
             operatingExpense.setName(name.getText().toString());
             operatingExpense.setValue(Mask.unmaskMoney(value.getText().toString()));
             operatingExpense.setDescription(description.getText().toString());
-            operatingExpense.setType(
-                    convertExpenseType(
-                            spinnerType.getSelectedItem().toString()));
+
+            String type = convertExpenseType(spinnerType.getSelectedItem().toString());
+            if(mOperatingExpense != null) {
+                if(!type.equals(mOperatingExpense.getType())) {
+                    operatingExpense.setType(mOperatingExpense.getType());
+                } else {
+                    operatingExpense.setType(type);
+                }
+            } else {
+                operatingExpense.setType(type);
+            }
 
             return operatingExpense;
         }
@@ -124,17 +157,21 @@ public class OperatingExpenseActionFragment extends Fragment {
     }
 
     private boolean validateFields() {
-        if(name.getText().toString().isEmpty() ||
-            value.getText().toString().isEmpty()) {
-
-            String error = getContext().getResources().getString(R.string.campo_obrigatorio);
-
-            name.setError(error);
-            value.setError(error);
-
+        if (Objects.equals(value.getText().toString(), null)) {
             return false;
+        } else {
+            String name = this.name.getText().toString();
+            Double prc = Mask.unmaskMoney(value.getText().toString());
+
+            if(name.isEmpty() || prc < 1) {
+                String error = getActivity().getResources().getString(R.string.campo_obrigatorio);
+                this.name.setError(error);
+                value.setError(error + ", o valor digitado não pode ser menor do que 1");
+
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 
     private void setupEditTexts(View view) {
@@ -217,6 +254,75 @@ public class OperatingExpenseActionFragment extends Fragment {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 SnackbarUtil.showSuccess(getActivity(), SERVER_ERROR);
+            }
+        });
+    }
+
+
+    private void updateOperatingExpenseInApi(OperatingExpenseModel operatingExpense, View v) {
+        String auth = sharedPreferences.getAuthentication();
+
+        OperatingExpenseService operatingExpenseService =
+                RetrofitConfig.getRetrofitInstance().create(OperatingExpenseService.class);
+        Call<Void> call = operatingExpenseService.update(
+                operatingExpense.getId(), operatingExpense, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    OperatingExpenseActivity.updateRecyclerView();
+                    SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
+                } else {
+                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_UPDATE);
+                    Log.e(TAG, operatingExpense.toString());
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                SnackbarUtil.showSuccess(getActivity(), SERVER_ERROR);
+            }
+        });
+    }
+
+    private void deleteOperatingExpense(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setMessage("Deseja mesmo excluir esta Despesa?")
+                .setPositiveButton("Sim", (dialog, id) -> {
+                    deleteOperatingExpenseFromApi(mOperatingExpense.getId());
+                })
+                .setNegativeButton("Cancelar", (dialog, id) -> {
+                    dialog.dismiss();
+                });
+
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteOperatingExpenseFromApi(Long id) {
+        String auth = sharedPreferences.getAuthentication();
+
+        OperatingExpenseService operatingExpenseService = RetrofitConfig.getRetrofitInstance().create(OperatingExpenseService.class);
+        Call<Void> call = operatingExpenseService.delete(id, auth);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
+                if(response.isSuccessful()) {
+                    OperatingExpenseActivity.updateRecyclerView();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
+                } else {
+                    SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
+                Log.e(TAG, id.toString());
             }
         });
     }

@@ -22,28 +22,26 @@ public class OperatingExpenseViewModel extends ViewModel {
 
     private MutableLiveData<List<OperatingExpenseModel>> operatingExpenses;
 
-    public LiveData<List<OperatingExpenseModel>> getOperatingExpenses(Long id, String auth) {
+    public LiveData<List<OperatingExpenseModel>> getOperatingExpenses(Long id) {
         if (operatingExpenses == null) {
             operatingExpenses = new MutableLiveData<>();
         }
 
-        loadOperatingExpensesFromApi(id, auth);
+        loadOperatingExpensesFromApi(id);
 
         return operatingExpenses;
     }
 
-    private void loadOperatingExpensesFromApi(Long id, String auth) {
+    private void loadOperatingExpensesFromApi(Long id) {
         OperatingExpenseService operatingExpenseService =
                 RetrofitConfig.getRetrofitInstance().create(OperatingExpenseService.class);
-        Call<List<OperatingExpenseModel>> call = operatingExpenseService.findAll(id, auth);
+        Call<List<OperatingExpenseModel>> call = operatingExpenseService.findAll(id);
 
         call.enqueue(new Callback<List<OperatingExpenseModel>>() {
             @Override
             public void onResponse(Call<List<OperatingExpenseModel>> call, Response<List<OperatingExpenseModel>> response) {
                 if(response.isSuccessful()) {
                     operatingExpenses.setValue(response.body());
-                } else {
-                    Log.e(TAG, "Deu merda");
                 }
             }
 

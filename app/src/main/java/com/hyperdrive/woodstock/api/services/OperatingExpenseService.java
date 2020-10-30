@@ -18,8 +18,7 @@ import retrofit2.http.Query;
 public interface OperatingExpenseService {
     @GET("expenses/")
     Call<List<OperatingExpenseModel>> findAll(
-            @Query("company") Long companyId,
-            @Header("Authorization") String auth);
+            @Query("company") Long companyId);
 
     @POST("expenses/")
     Call<Void> insert(

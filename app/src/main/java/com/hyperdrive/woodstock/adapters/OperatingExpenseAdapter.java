@@ -1,16 +1,22 @@
 package com.hyperdrive.woodstock.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.OperatingExpenseHolder;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
+import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActionFragment;
+import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActionFragment;
+import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActivity;
 import com.hyperdrive.woodstock.utils.DateUtil;
 
 import java.util.List;
@@ -52,13 +58,25 @@ public class OperatingExpenseAdapter extends RecyclerView.Adapter<OperatingExpen
                 operatingExpense.getValue()));
 
         holder.moreButton.setOnClickListener((v) -> {
-            Toast.makeText(v.getContext(), "Socorro", Toast.LENGTH_LONG).show();
+           callFragment(v, operatingExpense);
         });
     }
 
     @Override
     public int getItemCount() {
         return mOperatingExpenses != null ? mOperatingExpenses.size() : 0;
+    }
+
+    private void callFragment(View v, OperatingExpenseModel operatingExpense) {
+        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+
+        OperatingExpenseActionFragment operatingExpenseActionFragment =
+                OperatingExpenseActionFragment.newInstance(mCompanyId, operatingExpense);
+
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.operatingexpense_fragment_layout, operatingExpenseActionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void updateData(List<OperatingExpenseModel> operatingExpenses) {

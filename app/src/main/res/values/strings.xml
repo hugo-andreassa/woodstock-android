@@ -60,4 +60,15 @@
         <item>SALÁRIO</item>
     </string-array>
 
+    <string-array name="material_unit_array">
+        <item>UN</item>
+        <item>CT</item>
+        <item>CX</item>
+        <item>PÇ</item>
+        <item>PR</item>
+        <item>PT</item>
+        <item>RL</item>
+        <item>KG</item>
+        <item>L</item>
+    </string-array>
 </resources>

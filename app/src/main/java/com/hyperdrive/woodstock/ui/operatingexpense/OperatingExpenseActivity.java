@@ -20,7 +20,6 @@ import java.util.List;
 public class OperatingExpenseActivity extends AppCompatActivity {
 
     private static Long mCompanyId;
-    private static String mAuth;
     private OperatingExpenseAdapter mAdapter;
     private static OperatingExpenseViewModel mOperatingExpenseViewModel;
 
@@ -30,13 +29,12 @@ public class OperatingExpenseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_operating_expense);
 
         mCompanyId = 1L;
-        mAuth = new Preferences(getApplicationContext()).getAuthentication();
 
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
         mOperatingExpenseViewModel = new OperatingExpenseViewModel();
-        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, mAuth).observe(
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId).observe(
                 this, operatingExpenses -> {
                     mAdapter.updateData(operatingExpenses);
         });
@@ -67,6 +65,6 @@ public class OperatingExpenseActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, mAuth);
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId);
     }
 }
