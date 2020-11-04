@@ -28,7 +28,8 @@ public class OperatingExpenseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operating_expense);
 
-        mCompanyId = 1L;
+        Bundle bundle = getIntent().getExtras();
+        mCompanyId = bundle.getLong("companyId");
 
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());

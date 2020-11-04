@@ -53,7 +53,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
 
         String date = DateUtil.parseDateFromUtc(
                 budget.getCreationDate(),
-                DateUtil.DD_MM_YYYY_HH_MM_SS);
+                "d MMMM, yyyy HH:mm:ss");
         holder.creationDate.setText(date);
 
         holder.moreButton.setOnClickListener((v) -> {

@@ -7,4 +7,6 @@
 
     <color name="errorMessageColor">#d64161</color>
     <color name="successMessageColor">#86af49</color>
+
+    <color name="errorColor">#EF7F97</color>
 </resources>

@@ -16,7 +16,9 @@
         android:id="@+id/list_cuttingplan"
         tools:listitem="@layout/list_cutting_plan"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_cuttingplan"
@@ -26,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="40dp"
+        android:layout_margin="30dp"
         android:clickable="true"
         android:focusable="true" />
 </RelativeLayout>
