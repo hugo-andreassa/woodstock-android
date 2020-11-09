@@ -61,14 +61,15 @@
     </string-array>
 
     <string-array name="material_unit_array">
-        <item>UN</item>
-        <item>CT</item>
-        <item>CX</item>
-        <item>PÇ</item>
-        <item>PR</item>
-        <item>PT</item>
-        <item>RL</item>
-        <item>KG</item>
-        <item>L</item>
+        <item>UN (Unidade)</item>
+        <item>CT (Cartela)</item>
+        <item>CX (Caixa)</item>
+        <item>PÇ (Peça)</item>
+        <item>PR (Par)</item>
+        <item>PT (Pacote)</item>
+        <item>RL (Rolo)</item>
+        <item>KG (Quilos)</item>
+        <item>L (Litros)</item>
     </string-array>
+
 </resources>

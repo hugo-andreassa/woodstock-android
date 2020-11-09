@@ -7,11 +7,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.MaterialHolder;
 import com.hyperdrive.woodstock.models.MaterialModel;
+import com.hyperdrive.woodstock.ui.material.MaterialActionFragment;
 import com.hyperdrive.woodstock.utils.DateUtil;
 
 import java.util.List;
@@ -44,6 +47,10 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialHolder> {
             holder.cardView.setCardBackgroundColor(
                     mContext.getResources().getColor(R.color.errorColor));
             holder.warning.setVisibility(View.VISIBLE);
+        } else if (holder.warning.getVisibility() == View.VISIBLE) {
+            holder.cardView.setCardBackgroundColor(
+                    mContext.getResources().getColor(R.color.whiteColor));
+            holder.warning.setVisibility(View.GONE);
         }
 
         holder.name.setText(
@@ -67,13 +74,25 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialHolder> {
         ));
 
         holder.moreButton.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "Tá quase...", Toast.LENGTH_LONG).show();
+            callFragment(material, v);
         });
     }
 
     @Override
     public int getItemCount() {
         return mMaterials != null ? mMaterials.size() : 0;
+    }
+
+    private void callFragment(MaterialModel material, View view) {
+        AppCompatActivity activity = (AppCompatActivity) view.getContext();
+
+        MaterialActionFragment materialActionFragment =
+                MaterialActionFragment.newInstance(mCompanyId, material);
+
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.material_fragment_layout, materialActionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void updateData(List<MaterialModel> materials) {

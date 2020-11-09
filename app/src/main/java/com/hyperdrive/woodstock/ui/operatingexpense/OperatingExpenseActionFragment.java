@@ -18,12 +18,9 @@ import android.widget.Spinner;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.BudgetItemService;
 import com.hyperdrive.woodstock.api.services.OperatingExpenseService;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
-import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -124,7 +121,6 @@ public class OperatingExpenseActionFragment extends Fragment {
 
             if(mOperatingExpense != null) {
                 operatingExpense.setId(mOperatingExpense.getId());
-
                 updateOperatingExpenseInApi(operatingExpense, v);
             } else {
                 insertOperatingExpenseInApi(operatingExpense, v);
@@ -192,7 +188,7 @@ public class OperatingExpenseActionFragment extends Fragment {
         spinnerType.setAdapter(adapter);
     }
 
-    private void clearFields(View v) {
+    private void clearFields() {
         name.setText("");
         value.setText("");
         description.setText("");
@@ -243,7 +239,7 @@ public class OperatingExpenseActionFragment extends Fragment {
                 if (response.isSuccessful()) {
                     OperatingExpenseActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
-                    clearFields(v);
+                    clearFields();
                 } else {
                     SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
                     Log.e(TAG, operatingExpense.toString());

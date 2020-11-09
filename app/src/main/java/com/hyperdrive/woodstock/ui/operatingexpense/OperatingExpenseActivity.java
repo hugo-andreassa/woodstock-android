@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
@@ -22,6 +23,7 @@ public class OperatingExpenseActivity extends AppCompatActivity {
     private static Long mCompanyId;
     private OperatingExpenseAdapter mAdapter;
     private static OperatingExpenseViewModel mOperatingExpenseViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,9 @@ public class OperatingExpenseActivity extends AppCompatActivity {
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_operatingexpense);
         mOperatingExpenseViewModel = new OperatingExpenseViewModel();
-        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId).observe(
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, progressBar).observe(
                 this, operatingExpenses -> {
                     mAdapter.updateData(operatingExpenses);
         });
@@ -66,6 +69,6 @@ public class OperatingExpenseActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId);
+        mOperatingExpenseViewModel.getOperatingExpenses(mCompanyId, progressBar);
     }
 }

@@ -91,4 +91,18 @@ public class MaterialModel implements Serializable {
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
+
+    @Override
+    public String toString() {
+        return "MaterialModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", stock=" + stock +
+                ", minimumStock=" + minimumStock +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", unit='" + unit + '\'' +
+                ", companyId=" + companyId +
+                '}';
+    }
 }

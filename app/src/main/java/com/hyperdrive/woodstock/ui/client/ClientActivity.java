@@ -1,6 +1,7 @@
 package com.hyperdrive.woodstock.ui.client;
 
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,9 +23,10 @@ public class ClientActivity extends AppCompatActivity {
 
     private static final String TAG = "CLIENT_ACTIVITY";
 
-    private Preferences sharedPreferences;
-    private static ClientViewModel mClientViewModel;
+    private static Long mCompanyId;
     private ClientAdapter mAdapter;
+    private static ClientViewModel mClientViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +34,15 @@ public class ClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_client);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sharedPreferences = new Preferences(this);
+        Bundle bundle = getIntent().getExtras();
+        mCompanyId = bundle.getLong("companyId");
 
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_client);
         mClientViewModel = new ClientViewModel();
-        mClientViewModel.getClients().observe(this, clients -> {
+        mClientViewModel.getClients(mCompanyId, progressBar).observe(this, clients -> {
             mAdapter.updateData(clients);
         });
     }
@@ -72,6 +76,6 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mClientViewModel.getClients();
+        mClientViewModel.getClients(mCompanyId, progressBar);
     }
 }

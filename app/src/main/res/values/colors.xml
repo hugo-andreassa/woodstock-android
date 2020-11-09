@@ -9,4 +9,6 @@
     <color name="successMessageColor">#86af49</color>
 
     <color name="errorColor">#EF7F97</color>
+
+    <color name="whiteColor">#FFF</color>
 </resources>

@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.viewmodel;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,37 +21,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ClientViewModel extends ViewModel {
-        private String TAG = "CLIENT_VIEW_MODEL";
+    private String TAG = "CLIENT_VIEW_MODEL";
 
-        private MutableLiveData<List<ClientModel>> clients;
+    private MutableLiveData<List<ClientModel>> clients;
+    private ProgressBar progressBar;
 
-        public LiveData<List<ClientModel>> getClients() {
-            if (clients == null) {
-                clients = new MutableLiveData<>();
+    public LiveData<List<ClientModel>> getClients(Long id, ProgressBar progressBar) {
+        this.progressBar = progressBar;
+
+        if (clients == null) {
+            clients = new MutableLiveData<>();
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        loadClientsFromApi(id);
+
+        return clients;
+    }
+
+    private void loadClientsFromApi(Long id) {
+        ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
+        Call<List<ClientModel>> call = clientService.findAll(id);
+        call.enqueue(new Callback<List<ClientModel>>() {
+            @Override
+            public void onResponse(Call<List<ClientModel>> call, Response<List<ClientModel>> response) {
+                progressBar.setVisibility(View.GONE);
+                if(response.isSuccessful()) {
+                    clients.setValue(response.body());
+                }
             }
 
-            loadClientsFromApi();
+            @Override
+            public void onFailure(Call<List<ClientModel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "onFailure findAll Clients");
+            }
+        });
 
-            return clients;
-        }
-
-        private void loadClientsFromApi() {
-            ClientService clientService = RetrofitConfig.getRetrofitInstance().create(ClientService.class);
-            Call<List<ClientModel>> call = clientService.findAll(1L);
-            call.enqueue(new Callback<List<ClientModel>>() {
-                @Override
-                public void onResponse(Call<List<ClientModel>> call, Response<List<ClientModel>> response) {
-
-                    if(response.isSuccessful()) {
-                        clients.setValue(response.body());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<ClientModel>> call, Throwable t) {
-                    Log.e(TAG, "onFailure findAll Clients");
-                }
-            });
-
-        }
+    }
 }

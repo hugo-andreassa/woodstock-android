@@ -114,7 +114,7 @@ public class CuttingPlanActionFragment extends Fragment {
                     cuttingPlan.setId(mCuttingPlan.getId());
 
                     progressDialog.show();
-                    updateCuttingPlanInApi(cuttingPlan, view);
+                    updateCuttingPlanInApi(cuttingPlan);
                 } else {
                     progressDialog.show();
                     insertCuttingPlanInApi(cuttingPlan, view);
@@ -232,7 +232,7 @@ public class CuttingPlanActionFragment extends Fragment {
     }
 
 
-    private void updateCuttingPlanInApi(CuttingPlanModel cuttingPlan, View view) {
+    private void updateCuttingPlanInApi(CuttingPlanModel cuttingPlan) {
         String auth = sharedPreferences.getAuthentication();
 
         CuttingPlanService cuttingPlanService = RetrofitConfig.getRetrofitInstance().create(CuttingPlanService.class);

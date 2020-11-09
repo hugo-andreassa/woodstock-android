@@ -26,6 +26,7 @@
         android:text="@string/menu_solicitacoes"
         android:enabled="false"
         style="@style/CustomButton.Home"
+        android:visibility="gone"
         android:drawableStart="@drawable/ic_menu_solicitacao"/>
 
     <Button

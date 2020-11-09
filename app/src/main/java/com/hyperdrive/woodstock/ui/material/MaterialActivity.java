@@ -1,15 +1,18 @@
 package com.hyperdrive.woodstock.ui.material;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.MaterialAdapter;
 import com.hyperdrive.woodstock.models.MaterialModel;
+import com.hyperdrive.woodstock.viewmodel.MaterialViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +21,10 @@ public class MaterialActivity extends AppCompatActivity {
 
     private String TAG = "MATERIAL_ACTIVITY";
 
-    private Long mCompanyId;
+    private static Long mCompanyId;
     private MaterialAdapter mAdapter;
+    private static MaterialViewModel mMaterialViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,32 +35,26 @@ public class MaterialActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mCompanyId = bundle.getLong("companyId");
 
-        List<MaterialModel> materials = new ArrayList<>();
-        materials.add(new MaterialModel(null, "Corrediça 45mm Larga",
-                "", 10, 15, "2020-11-13T23:30:52Z", "PR", 1L));
-        materials.add(new MaterialModel(null, "Corrediça 40mm Larga",
-                "", 10, 5, "2020-11-13T23:30:52Z", "PR", 1L));
-        materials.add(new MaterialModel(null, "Corrediça 35mm Larga",
-                "", 10, 0, "2020-11-13T23:30:52Z", "PR", 1L));
-        materials.add(new MaterialModel(null, "Corrediça 30mm Larga",
-                "", 10, 0, "2020-11-13T23:30:52Z", "PR", 1L));
-        materials.add(new MaterialModel(null, "Corrediça 25mm Estreita",
-                "", 10, 0, "2020-11-13T23:30:52Z", "PR", 1L));
-
         setupFloatingActionButton();
-        setupRecyclerView(materials);
+        setupRecyclerView(new ArrayList<>());
+
+        progressBar = findViewById(R.id.progress_material);
+        mMaterialViewModel = new MaterialViewModel();
+        mMaterialViewModel.getMaterials(mCompanyId, progressBar).observe(this, materials -> {
+            mAdapter.updateData(materials);
+        });
     }
 
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_material);
         fab.setOnClickListener(v -> {
-            /* OperatingExpenseActionFragment operatingExpenseActionFragment =
-                    OperatingExpenseActionFragment.newInstance(mCompanyId, null);
+            MaterialActionFragment materialActionFragment =
+                    MaterialActionFragment.newInstance(mCompanyId, null);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.operatingexpense_fragment_layout, operatingExpenseActionFragment);
+            transaction.replace(R.id.material_fragment_layout, materialActionFragment);
             transaction.addToBackStack(null);
-            transaction.commit(); */
+            transaction.commit();
         });
     }
 
@@ -71,5 +70,6 @@ public class MaterialActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
+        mMaterialViewModel.getMaterials(mCompanyId, progressBar);
     }
 }

@@ -1,7 +1,10 @@
 package com.hyperdrive.woodstock.viewmodel;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,12 +24,16 @@ public class OperatingExpenseViewModel extends ViewModel {
     private String TAG = "EXPENSE_VIEW_MODEL";
 
     private MutableLiveData<List<OperatingExpenseModel>> operatingExpenses;
+    private ProgressBar progressBar;
 
-    public LiveData<List<OperatingExpenseModel>> getOperatingExpenses(Long id) {
+    public LiveData<List<OperatingExpenseModel>> getOperatingExpenses(Long id, ProgressBar progressBar) {
+        this.progressBar = progressBar;
+
         if (operatingExpenses == null) {
             operatingExpenses = new MutableLiveData<>();
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         loadOperatingExpensesFromApi(id);
 
         return operatingExpenses;
@@ -40,6 +47,7 @@ public class OperatingExpenseViewModel extends ViewModel {
         call.enqueue(new Callback<List<OperatingExpenseModel>>() {
             @Override
             public void onResponse(Call<List<OperatingExpenseModel>> call, Response<List<OperatingExpenseModel>> response) {
+                progressBar.setVisibility(View.GONE);
                 if(response.isSuccessful()) {
                     operatingExpenses.setValue(response.body());
                 }
@@ -47,6 +55,7 @@ public class OperatingExpenseViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<OperatingExpenseModel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure findAll Operating Expense");
             }
         });
