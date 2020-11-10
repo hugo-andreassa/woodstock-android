@@ -62,7 +62,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:layout_gravity="end">
 
             <ImageButton
                 android:id="@+id/cuttingplan_list_more_button"

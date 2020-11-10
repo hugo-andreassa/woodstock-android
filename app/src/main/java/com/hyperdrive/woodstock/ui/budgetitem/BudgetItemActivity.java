@@ -1,11 +1,14 @@
 package com.hyperdrive.woodstock.ui.budgetitem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
@@ -21,6 +24,7 @@ public class BudgetItemActivity extends AppCompatActivity {
     private static Long mBudgetId;
     private BudgetItemAdapter mAdapter;
     private static BudgetItemViewModel mBudgetItemViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +38,21 @@ public class BudgetItemActivity extends AppCompatActivity {
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_budgetitem);
         mBudgetItemViewModel = new BudgetItemViewModel();
-        mBudgetItemViewModel.getBudgetItems(mBudgetId).observe(this, budgetItems -> {
+        mBudgetItemViewModel.getBudgetItems(mBudgetId, progressBar).observe(this, budgetItems -> {
             mAdapter.updateData(budgetItems);
         });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        mBudgetItemViewModel.getBudgetItems(mBudgetId);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFloatingActionButton() {
@@ -71,6 +79,6 @@ public class BudgetItemActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mBudgetItemViewModel.getBudgetItems(mBudgetId);
+        mBudgetItemViewModel.getBudgetItems(mBudgetId, progressBar);
     }
 }

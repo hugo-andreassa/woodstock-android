@@ -43,6 +43,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/budget_deadline_layout"
+                app:suffixText="dias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
@@ -107,6 +108,14 @@
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 style="@style/CustomImageView.Form"/>
+
+            <TextView
+                android:text="Status do Orçamento: "
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
             <Spinner
                 android:id="@+id/budget_status"
                 android:layout_width="match_parent"

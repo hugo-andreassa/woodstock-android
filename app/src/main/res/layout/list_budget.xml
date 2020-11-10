@@ -35,10 +35,10 @@
 
             <TextView
                 android:id="@+id/budget_list_creation_date"
-                android:textAlignment="inherit"
+                android:textSize="15sp"
+                android:textStyle="bold"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout

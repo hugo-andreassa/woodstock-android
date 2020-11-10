@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.viewmodel;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,12 +23,15 @@ public class ProjectViewModel extends ViewModel {
     private String TAG = "PROJECT_VIEW_MODEL";
 
     private MutableLiveData<List<ProjectModel>> projects;
+    private ProgressBar progressBar;
 
-    public LiveData<List<ProjectModel>> getProjects(Long id) {
+    public LiveData<List<ProjectModel>> getProjects(Long id, ProgressBar progressBar) {
+        this.progressBar = progressBar;
         if (projects == null) {
             projects = new MutableLiveData<>();
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         loadProjectsFromApi(id);
 
         return projects;
@@ -39,6 +44,7 @@ public class ProjectViewModel extends ViewModel {
         call.enqueue(new Callback<List<ProjectModel>>() {
             @Override
             public void onResponse(Call<List<ProjectModel>> call, Response<List<ProjectModel>> response) {
+                progressBar.setVisibility(View.GONE);
                 if(response.isSuccessful()) {
                     projects.setValue(response.body());
                 }
@@ -46,6 +52,7 @@ public class ProjectViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<ProjectModel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure findAll projects");
             }
         });

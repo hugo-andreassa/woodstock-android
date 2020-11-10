@@ -1,5 +1,6 @@
 package com.hyperdrive.woodstock.ui.budget;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,6 +15,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +38,7 @@ public class BudgetActivity extends AppCompatActivity {
     private static Long clientId;
     private BudgetAdapter mAdapter;
     private static BudgetViewModel mBudgetViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +46,40 @@ public class BudgetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_budget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
-        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 2);
-
         Bundle bundle = getIntent().getExtras();
         clientId = bundle.getLong("clientId");
         String clientName = bundle.getString("clientName");
 
         // Troca o titulo da Activity
-        setTitle("Orçamentos " + clientName);
+        setTitle("Orçamentos " + clientName.split(" ")[0]);
+
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
+        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 2);
 
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_budget);
         mBudgetViewModel = new BudgetViewModel();
-        mBudgetViewModel.getBudgets(clientId).observe(this, budgets -> {
+        mBudgetViewModel.getBudgets(clientId, progressBar).observe(this, budgets -> {
             mAdapter.updateData(budgets);
         });
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
+        updateRecyclerView();
+    }
 
-        mBudgetViewModel.getBudgets(clientId);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFloatingActionButton() {
@@ -94,7 +108,7 @@ public class BudgetActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mBudgetViewModel.getBudgets(clientId);
+        mBudgetViewModel.getBudgets(clientId, progressBar);
     }
 
     private void askForPermission(String permission, Integer requestCode) {

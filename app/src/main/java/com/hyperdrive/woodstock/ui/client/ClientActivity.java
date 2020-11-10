@@ -1,8 +1,10 @@
 package com.hyperdrive.woodstock.ui.client;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -45,6 +47,16 @@ public class ClientActivity extends AppCompatActivity {
         mClientViewModel.getClients(mCompanyId, progressBar).observe(this, clients -> {
             mAdapter.updateData(clients);
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFloatingActionButton() {

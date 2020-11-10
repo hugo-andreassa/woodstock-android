@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.viewmodel;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,12 +25,15 @@ public class BudgetItemViewModel  extends ViewModel {
     private String TAG = "BUDGET_ITEM_VIEW_MODEL";
 
     private MutableLiveData<List<BudgetItemModel>> budgetItems;
+    private ProgressBar progressBar;
 
-    public LiveData<List<BudgetItemModel>> getBudgetItems(Long id) {
+    public LiveData<List<BudgetItemModel>> getBudgetItems(Long id, ProgressBar progressBar) {
+        this.progressBar = progressBar;
         if (budgetItems == null) {
             budgetItems = new MutableLiveData<>();
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         loadBudgetItemsFromApi(id);
 
         return budgetItems;
@@ -41,6 +46,7 @@ public class BudgetItemViewModel  extends ViewModel {
         call.enqueue(new Callback<List<BudgetItemModel>>() {
             @Override
             public void onResponse(Call<List<BudgetItemModel>> call, Response<List<BudgetItemModel>> response) {
+                progressBar.setVisibility(View.GONE);
                 if(response.isSuccessful()) {
                     budgetItems.setValue(response.body());
                 }
@@ -48,6 +54,7 @@ public class BudgetItemViewModel  extends ViewModel {
 
             @Override
             public void onFailure(Call<List<BudgetItemModel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure findAll Budget Items");
             }
         });

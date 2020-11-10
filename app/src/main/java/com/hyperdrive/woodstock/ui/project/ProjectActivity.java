@@ -3,8 +3,11 @@ package com.hyperdrive.woodstock.ui.project;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -30,6 +33,7 @@ public class ProjectActivity extends AppCompatActivity {
     private static Long mBudgetItemId;
     private ProjectAdapter mAdapter;
     private static ProjectViewModel mProjectViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +49,21 @@ public class ProjectActivity extends AppCompatActivity {
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_project);
         mProjectViewModel = new ProjectViewModel();
-        mProjectViewModel.getProjects(mBudgetItemId).observe(this, projects -> {
+        mProjectViewModel.getProjects(mBudgetItemId, progressBar).observe(this, projects -> {
             mAdapter.updateData(projects);
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFloatingActionButton() {
@@ -88,6 +103,6 @@ public class ProjectActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mProjectViewModel.getProjects(mBudgetItemId);
+        mProjectViewModel.getProjects(mBudgetItemId, progressBar);
     }
 }

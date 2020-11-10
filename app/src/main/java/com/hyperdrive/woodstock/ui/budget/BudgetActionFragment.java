@@ -270,9 +270,7 @@ public class BudgetActionFragment extends Fragment {
             addressModel.setCep(Mask.unmask(cep.getText().toString()));
             addressModel.setStreet(street.getText().toString());
             addressModel.setCity(city.getText().toString());
-
             addressModel.setState(spinnerEstados.getSelectedItem().toString());
-
             addressModel.setNumber(number.getText().toString());
             addressModel.setComp(comp.getText().toString());
 

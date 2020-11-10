@@ -43,18 +43,23 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
     public void onBindViewHolder(@NonNull BudgetHolder holder, int position) {
         BudgetModel budget = mBudgets.get(position);
 
-        String status = String.format(
+        String number = String.format(
                 Locale.forLanguageTag("BR"),
                 "Orçamento %d",
                 position + 1);
-        holder.number.setText(status);
+        holder.number.setText(number);
 
-        holder.status.setText(budget.getStatus());
+        String status = budget.getStatus().substring(0, 1).toUpperCase(Locale.forLanguageTag("BR"))
+                + budget.getStatus().substring(1).toLowerCase(Locale.forLanguageTag("BR"));
+        holder.status.setText(status);
 
         String date = DateUtil.parseDateFromUtc(
                 budget.getCreationDate(),
-                "d MMMM, yyyy HH:mm:ss");
-        holder.creationDate.setText(date);
+                "d MMMM");
+        holder.creationDate.setText( String.format(
+                Locale.forLanguageTag("BR"),
+                "Data de criação: %s",
+                date));
 
         holder.moreButton.setOnClickListener((v) -> {
             callFragment(v, budget);

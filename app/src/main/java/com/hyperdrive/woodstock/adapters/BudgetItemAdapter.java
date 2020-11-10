@@ -47,13 +47,19 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
     public void onBindViewHolder(@NonNull BudgetItemHolder holder, int position) {
         BudgetItemModel budgetItem = mBudgetItems.get(position);
 
-        String environment = String.format(
+        String number = String.format(
                 Locale.forLanguageTag("BR"),
-                "Item %d - %s (%s)",
-                position + 1,
-                budgetItem.getEnvironment().isEmpty() ? "#" : budgetItem.getEnvironment(),
-                budgetItem.getStatus());
-        holder.environment.setText(environment);
+                "Item %d",
+                position + 1);
+        holder.number.setText(number);
+
+        if(budgetItem.getEnvironment().isEmpty()) {
+            holder.environment.setVisibility(View.GONE);
+        }
+
+        String status = budgetItem.getStatus().substring(0, 1).toUpperCase(Locale.forLanguageTag("BR"))
+                + budgetItem.getStatus().substring(1).toLowerCase(Locale.forLanguageTag("BR"));
+        holder.status.setText(status);
 
         holder.description.setText(budgetItem.getDescription());
 

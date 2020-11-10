@@ -2,7 +2,10 @@ package com.hyperdrive.woodstock.ui.cuttingplan;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +27,7 @@ public class CuttingPlanActivity extends AppCompatActivity {
     private static Long mBudgetItemId;
     private CuttingPlanAdapter mAdapter;
     private static CuttingPlanViewModel mCuttingPlanViewModel;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +42,21 @@ public class CuttingPlanActivity extends AppCompatActivity {
         setupFloatingActionButton();
         setupRecyclerView(new ArrayList<>());
 
+        progressBar = findViewById(R.id.progress_cuttingplan);
         mCuttingPlanViewModel = new CuttingPlanViewModel();
-        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId).observe(this, cuttingPlans -> {
+        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId, progressBar).observe(this, cuttingPlans -> {
             mAdapter.updateData(cuttingPlans);
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFloatingActionButton() {
@@ -69,6 +84,6 @@ public class CuttingPlanActivity extends AppCompatActivity {
     }
 
     public static void updateRecyclerView() {
-        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId);
+        mCuttingPlanViewModel.getCuttingPlans(mBudgetItemId, progressBar);
     }
 }

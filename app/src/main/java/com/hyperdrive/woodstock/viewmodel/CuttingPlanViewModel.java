@@ -1,6 +1,8 @@
 package com.hyperdrive.woodstock.viewmodel;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,12 +23,15 @@ public class CuttingPlanViewModel extends ViewModel {
     private String TAG = "CUTTING_PLAN_VIEW_MODEL";
 
     private MutableLiveData<List<CuttingPlanModel>> cuttingPlans;
+    private ProgressBar progressBar;
 
-    public LiveData<List<CuttingPlanModel>> getCuttingPlans(Long id) {
+    public LiveData<List<CuttingPlanModel>> getCuttingPlans(Long id, ProgressBar progressBar) {
+        this.progressBar = progressBar;
         if (cuttingPlans == null) {
             cuttingPlans = new MutableLiveData<>();
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         loadCuttingPlansFromApi(id);
 
         return cuttingPlans;
@@ -39,6 +44,7 @@ public class CuttingPlanViewModel extends ViewModel {
         call.enqueue(new Callback<List<CuttingPlanModel>>() {
             @Override
             public void onResponse(Call<List<CuttingPlanModel>> call, Response<List<CuttingPlanModel>> response) {
+                progressBar.setVisibility(View.GONE);
                 if(response.isSuccessful()) {
                     cuttingPlans.setValue(response.body());
                 }
@@ -46,6 +52,7 @@ public class CuttingPlanViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<CuttingPlanModel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "onFailure findAll Cutting Plan");
             }
         });

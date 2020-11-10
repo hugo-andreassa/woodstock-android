@@ -51,7 +51,6 @@ public class OperatingExpenseActionFragment extends Fragment {
     private TextInputEditText name;
     private TextInputEditText value;
     private TextInputEditText description;
-    private Spinner spinnerType;
 
     public OperatingExpenseActionFragment() {
 
@@ -84,7 +83,6 @@ public class OperatingExpenseActionFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 
-        setupSpinnerDropdownType(view);
         setupEditTexts(view);
         setupSaveButton(view);
 
@@ -119,6 +117,7 @@ public class OperatingExpenseActionFragment extends Fragment {
                 return;
             }
 
+            progressDialog.show();
             if(mOperatingExpense != null) {
                 operatingExpense.setId(mOperatingExpense.getId());
                 updateOperatingExpenseInApi(operatingExpense, v);
@@ -135,17 +134,6 @@ public class OperatingExpenseActionFragment extends Fragment {
             operatingExpense.setName(name.getText().toString());
             operatingExpense.setValue(Mask.unmaskMoney(value.getText().toString()));
             operatingExpense.setDescription(description.getText().toString());
-
-            String type = convertExpenseType(spinnerType.getSelectedItem().toString());
-            if(mOperatingExpense != null) {
-                if(!type.equals(mOperatingExpense.getType())) {
-                    operatingExpense.setType(mOperatingExpense.getType());
-                } else {
-                    operatingExpense.setType(type);
-                }
-            } else {
-                operatingExpense.setType(type);
-            }
 
             return operatingExpense;
         }
@@ -178,53 +166,10 @@ public class OperatingExpenseActionFragment extends Fragment {
         value.addTextChangedListener(Mask.moneyMask(value));
     }
 
-    private void setupSpinnerDropdownType(View v) {
-        spinnerType = v.findViewById(R.id.operating_type);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
-                R.array.operating_type_array, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerType.setAdapter(adapter);
-    }
-
     private void clearFields() {
         name.setText("");
         value.setText("");
         description.setText("");
-    }
-
-    private String convertExpenseType(String type) {
-        String aux = "";
-
-        switch (type) {
-            case "DESPESAS COM VEÍCULO":
-                aux = "DESPESAS_ESCRITORIO";
-                break;
-            case "MANUTENÇÃO":
-                aux =  "MANUTENCAO";
-                break;
-            case "SUPRIMENTOS":
-                aux =  "SUPRIMENTOS";
-                break;
-            case "CONTAS":
-                aux =  "CONTAS";
-                break;
-            case "DESPESAS COM ESCRITÓRIO":
-                aux =  "DESPESAS_ESCRITORIO";
-                break;
-            case "ALUGUEL":
-                aux =  "ALUGUEL";
-                break;
-            case "SALARIO":
-                aux =  "SALARIO";
-                break;
-            default:
-                aux = "";
-                break;
-        };
-
-        return aux;
     }
 
     private void insertOperatingExpenseInApi(OperatingExpenseModel operatingExpense, View v) {
@@ -236,6 +181,7 @@ public class OperatingExpenseActionFragment extends Fragment {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()) {
                     OperatingExpenseActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
@@ -249,6 +195,7 @@ public class OperatingExpenseActionFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
                 SnackbarUtil.showSuccess(getActivity(), SERVER_ERROR);
             }
         });
@@ -265,6 +212,7 @@ public class OperatingExpenseActionFragment extends Fragment {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()) {
                     OperatingExpenseActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_UPDATE);
@@ -277,6 +225,7 @@ public class OperatingExpenseActionFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
                 SnackbarUtil.showSuccess(getActivity(), SERVER_ERROR);
             }
         });
@@ -286,6 +235,7 @@ public class OperatingExpenseActionFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         builder.setMessage("Deseja mesmo excluir esta Despesa?")
                 .setPositiveButton("Sim", (dialog, id) -> {
+                    progressDialog.show();
                     deleteOperatingExpenseFromApi(mOperatingExpense.getId());
                 })
                 .setNegativeButton("Cancelar", (dialog, id) -> {

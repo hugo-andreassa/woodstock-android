@@ -10,7 +10,6 @@ public class OperatingExpenseModel implements Serializable {
     private String description;
     private Double value;
     private String creationDate;
-    private String type;
 
     private Long companyId;
 
@@ -19,13 +18,12 @@ public class OperatingExpenseModel implements Serializable {
     }
 
     public OperatingExpenseModel(Long id, String name, String description,
-                                 Double value, String creationDate, String type, Long companyId) {
+                                 Double value, String creationDate, Long companyId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.value = value;
         this.creationDate = creationDate;
-        this.type = type;
         this.companyId = companyId;
     }
 
@@ -69,14 +67,6 @@ public class OperatingExpenseModel implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public Long getCompanyId() {
         return companyId;
     }
@@ -93,7 +83,6 @@ public class OperatingExpenseModel implements Serializable {
                 ", description='" + description + '\'' +
                 ", value=" + value +
                 ", creationDate='" + creationDate + '\'' +
-                ", type='" + type + '\'' +
                 ", companyId=" + companyId +
                 '}';
     }

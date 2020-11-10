@@ -62,17 +62,16 @@
         </LinearLayout>
 
         <LinearLayout
-            style="@style/CustomLinearLayout.Form"
-            android:padding="10dp"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            style="@style/CustomLinearLayout.Form">
+            <ImageView
+                style="@style/CustomImageView.Form"/>
 
             <TextView
-                android:text="Unidade de medida"
+                android:text="Unidade de medida: "
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_height="wrap_content"/>
 
             <Spinner
                 android:id="@+id/material_unit"
