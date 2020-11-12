@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.BudgetItemAdapter;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
+import com.hyperdrive.woodstock.models.UserModel;
+import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.viewmodel.BudgetItemViewModel;
 
 import java.util.ArrayList;
@@ -25,12 +28,16 @@ public class BudgetItemActivity extends AppCompatActivity {
     private BudgetItemAdapter mAdapter;
     private static BudgetItemViewModel mBudgetItemViewModel;
     private static ProgressBar progressBar;
+    private UserModel mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget_item);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Preferences sharedPreferences = new Preferences(getApplicationContext());
+        mUser = sharedPreferences.getUser();
 
         Bundle bundle = getIntent().getExtras();
         mBudgetId = bundle.getLong("budgetId");
@@ -57,8 +64,15 @@ public class BudgetItemActivity extends AppCompatActivity {
 
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_budgetitem);
+
+        if(!mUser.getType().equals("ADMIN")) {
+            fab.setVisibility(View.GONE);
+        }
+
         fab.setOnClickListener(v -> {
-            BudgetItemActionFragment budgetItemActionFragment = BudgetItemActionFragment.newInstance(mBudgetId, null);
+            BudgetItemActionFragment budgetItemActionFragment =
+                    BudgetItemActionFragment.newInstance(mBudgetId, null,
+                            mUser.getType());
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);
@@ -74,7 +88,7 @@ public class BudgetItemActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new BudgetItemAdapter(budgetItems, mBudgetId);
+        mAdapter = new BudgetItemAdapter(budgetItems, mBudgetId, mUser.getType());
         mRecyclerView.setAdapter(mAdapter);
     }
 

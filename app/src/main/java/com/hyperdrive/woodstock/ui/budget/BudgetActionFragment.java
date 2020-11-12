@@ -4,9 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,14 +38,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BudgetActionFragment extends Fragment {
+public class BudgetActionFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "BUDGET_ACTION_FRAGMENT";
 
@@ -61,13 +61,13 @@ public class BudgetActionFragment extends Fragment {
     private static final String ARG_PARAM1 = "clientId";
     private static final String ARG_PARAM2 = "budget";
 
-    private BudgetModel budget;
-    private Long clientId;
+    private BudgetModel mBudget;
+    private Long mClientId;
 
     private TextInputEditText deadline;
     private TextInputEditText deliveryDay;
     private TextInputEditText paymentMethod;
-    private Spinner spinnerStatus;
+    private String status;
     private TextInputEditText cep;
     private TextInputEditText street;
     private TextInputEditText city;
@@ -95,8 +95,8 @@ public class BudgetActionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            clientId = getArguments().getLong(ARG_PARAM1);
-            budget = (BudgetModel) getArguments().getSerializable(ARG_PARAM2);
+            mClientId = getArguments().getLong(ARG_PARAM1);
+            mBudget = (BudgetModel) getArguments().getSerializable(ARG_PARAM2);
         }
     }
 
@@ -114,7 +114,7 @@ public class BudgetActionFragment extends Fragment {
         setupSpinnerDropdownEstados(v);
 
         setupEditTexts(v);
-        if(budget != null) {
+        if(mBudget != null) {
             loadFieldsInformation();
             setupTotalField(v);
             setupDeleteButton(v);
@@ -127,13 +127,13 @@ public class BudgetActionFragment extends Fragment {
     }
 
     private void setupTotalField(View v) {
-        if(budget.getTotal() > 0) {
+        if(mBudget.getTotal() > 0) {
             View linear = v.findViewById(R.id.budget_total_linear_layout);
             linear.setVisibility(View.VISIBLE);
 
             TextInputEditText total = v.findViewById(R.id.budget_total);
             total.addTextChangedListener(Mask.moneyMask(total));
-            total.setText(String.valueOf(budget.getTotal() * 10));
+            total.setText(String.valueOf(mBudget.getTotal() * 10));
         }
     }
 
@@ -159,8 +159,8 @@ public class BudgetActionFragment extends Fragment {
             BudgetModel budgetModel = getValuesFromFields();
 
             if(budgetModel != null) {
-                if (budget != null) {
-                    budgetModel.setId(budget.getId());
+                if (mBudget != null) {
+                    budgetModel.setId(mBudget.getId());
 
                     progressDialog.show();
                     updateBudgetInApi(budgetModel, v);
@@ -172,14 +172,35 @@ public class BudgetActionFragment extends Fragment {
         });
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        this.status = parent.getItemAtPosition(pos).toString();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        return;
+    }
+
     private void setupSpinnerDropdownStatus(View v) {
-        spinnerStatus = v.findViewById(R.id.budget_status);
+        Spinner spinnerStatus = v.findViewById(R.id.budget_status);
+        spinnerStatus.setOnItemSelectedListener(this);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
                 R.array.budget_status_array, android.R.layout.simple_spinner_item);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerStatus.setAdapter(adapter);
+
+        if(mBudget != null) {
+            List<String> list = Arrays.asList(
+                    v.getContext().getResources().getStringArray(R.array.budget_status_array));
+            for (int i=0; i<=list.size(); i++) {
+                String str = list.get(i);
+                if(str.equals(mBudget.getStatus())) {
+                    spinnerStatus.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void setupSpinnerDropdownEstados(View v) {
@@ -225,19 +246,19 @@ public class BudgetActionFragment extends Fragment {
     }
 
     private void loadFieldsInformation() {
-        deadline.setText(String.valueOf(budget.getDeadline()));
+        deadline.setText(String.valueOf(mBudget.getDeadline()));
 
         String date = DateUtil.formatDateFromServer(
-                budget.getDeliveryDay(),
+                mBudget.getDeliveryDay(),
                 DateUtil.DD_MM_YYYY);
         deliveryDay.setText(date);
-        paymentMethod.setText(budget.getPaymentMethod());
+        paymentMethod.setText(mBudget.getPaymentMethod());
 
-        cep.setText(budget.getAddress().getCep());
-        street.setText(budget.getAddress().getStreet());
-        city.setText(budget.getAddress().getCity());
-        number.setText(budget.getAddress().getNumber());
-        comp.setText(budget.getAddress().getComp());
+        cep.setText(mBudget.getAddress().getCep());
+        street.setText(mBudget.getAddress().getStreet());
+        city.setText(mBudget.getAddress().getCity());
+        number.setText(mBudget.getAddress().getNumber());
+        comp.setText(mBudget.getAddress().getComp());
     }
 
     private void clearFields() {
@@ -257,14 +278,14 @@ public class BudgetActionFragment extends Fragment {
         if(validateFields()) {
             BudgetModel budget = new BudgetModel();
 
-            budget.setClientId(clientId);
+            budget.setClientId(mClientId);
             budget.setDeadline(Integer.parseInt(deadline.getText().toString()));
             String date = DateUtil.formatDateToServer(
                     deliveryDay.getText().toString(),
                     DateUtil.DD_MM_YYYY);
             budget.setDeliveryDay(date);
             budget.setPaymentMethod(paymentMethod.getText().toString());
-            budget.setStatus(spinnerStatus.getSelectedItem().toString());
+            budget.setStatus(status);
 
             AddressModel addressModel = new AddressModel();
             addressModel.setCep(Mask.unmask(cep.getText().toString()));
@@ -358,7 +379,7 @@ public class BudgetActionFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         builder.setMessage("Deseja mesmo excluir este orçamento?")
                 .setPositiveButton("Sim", (dialog, id) -> {
-                    deleteBudgetFromApi(budget.getId(), v);
+                    deleteBudgetFromApi(mBudget.getId(), v);
                 })
                 .setNegativeButton("Cancelar", (dialog, id) -> {
                     dialog.dismiss();
@@ -396,10 +417,10 @@ public class BudgetActionFragment extends Fragment {
     private void downloadPdfFromApi(View v) {
         String auth = sharedPreferences.getAuthentication();
 
-        Log.e(TAG, clientId + " - " + budget.getId() + " - "  + auth);
+        Log.e(TAG, mClientId + " - " + mBudget.getId() + " - "  + auth);
 
         BudgetService budgetService = RetrofitConfig.getRetrofitInstance().create(BudgetService.class);
-        Call<ResponseBody> call = budgetService.downloadPdf(1l, clientId, budget.getId(), auth);
+        Call<ResponseBody> call = budgetService.downloadPdf(1l, mClientId, mBudget.getId(), auth);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {

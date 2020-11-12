@@ -2,6 +2,7 @@ package com.hyperdrive.woodstock.ui.client;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.ClientAdapter;
 import com.hyperdrive.woodstock.models.ClientModel;
+import com.hyperdrive.woodstock.models.UserModel;
 import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
@@ -29,12 +31,16 @@ public class ClientActivity extends AppCompatActivity {
     private ClientAdapter mAdapter;
     private static ClientViewModel mClientViewModel;
     private static ProgressBar progressBar;
+    private UserModel mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Preferences sharedPreferences = new Preferences(getApplicationContext());
+        mUser = sharedPreferences.getUser();
 
         Bundle bundle = getIntent().getExtras();
         mCompanyId = bundle.getLong("companyId");
@@ -61,6 +67,11 @@ public class ClientActivity extends AppCompatActivity {
 
     private void setupFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab_client);
+
+        if(!mUser.getType().equals("ADMIN")) {
+            fab.setVisibility(View.GONE);
+        }
+
         fab.setOnClickListener(v -> {
             ClientActionFragment clientActionFragment = new ClientActionFragment();
 
@@ -83,7 +94,7 @@ public class ClientActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // specify an adapter
-        mAdapter = new ClientAdapter(clients);
+        mAdapter = new ClientAdapter(clients, mUser.getType());
         mRecyclerView.setAdapter(mAdapter);
     }
 

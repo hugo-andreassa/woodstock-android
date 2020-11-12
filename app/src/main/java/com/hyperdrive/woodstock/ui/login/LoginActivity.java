@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // LoginModel loginModel = getLoginModel();
-                LoginModel loginModel = new LoginModel("hugo.andreassa@gmail.com", "hugo@hugo123");
+                LoginModel loginModel = new LoginModel("wesley@gmail.com", "123456");
 
                 if(loginModel != null) {
                     progressDialog.show();

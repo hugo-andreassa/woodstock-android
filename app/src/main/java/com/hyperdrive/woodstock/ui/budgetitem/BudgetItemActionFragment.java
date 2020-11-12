@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,13 +26,15 @@ import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BudgetItemActionFragment extends Fragment {
+public class BudgetItemActionFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "BDGT_ITM_ACTN_FRAG";
 
@@ -44,14 +47,16 @@ public class BudgetItemActionFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "budgetId";
     private static final String ARG_PARAM2 = "budgetItem";
+    private static final String ARG_PARAM3 = "userType";
 
     private Long mBudgetId;
     private BudgetItemModel mBudgetItem;
+    private String mUserType;
 
     private TextInputEditText description;
     private TextInputEditText price;
     private TextInputEditText environment;
-    private Spinner spinnerStatus;
+    private String status;
 
     private Integer quantity = 1;
 
@@ -62,11 +67,13 @@ public class BudgetItemActionFragment extends Fragment {
 
     }
 
-    public static BudgetItemActionFragment newInstance(Long mBudgetId, BudgetItemModel mBudgetItem) {
+    public static BudgetItemActionFragment newInstance(Long mBudgetId, BudgetItemModel mBudgetItem,
+                                                       String mUserType) {
         BudgetItemActionFragment fragment = new BudgetItemActionFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM1, mBudgetId);
         args.putSerializable(ARG_PARAM2, mBudgetItem);
+        args.putString(ARG_PARAM3, mUserType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +84,7 @@ public class BudgetItemActionFragment extends Fragment {
         if (getArguments() != null) {
             mBudgetId = getArguments().getLong(ARG_PARAM1);
             mBudgetItem = (BudgetItemModel) getArguments().getSerializable(ARG_PARAM2);
+            mUserType = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -102,14 +110,35 @@ public class BudgetItemActionFragment extends Fragment {
         return view;
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        this.status = parent.getItemAtPosition(pos).toString();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        return;
+    }
+
     private void setupSpinnerDropdownStatus(View v) {
-        spinnerStatus = v.findViewById(R.id.budgetitem_status);
+        Spinner spinnerStatus = v.findViewById(R.id.budgetitem_status);
+        spinnerStatus.setOnItemSelectedListener(this);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
                 R.array.budgetitem_status_array, android.R.layout.simple_spinner_item);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerStatus.setAdapter(adapter);
+
+        if(mBudgetItem != null) {
+            List<String> list = Arrays.asList(
+                    v.getContext().getResources().getStringArray(R.array.budgetitem_status_array));
+            for (int i=0; i<=list.size(); i++) {
+                String str = list.get(i);
+                if(str.equals(mBudgetItem.getStatus())) {
+                    spinnerStatus.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void setupEditTexts(View v) {
@@ -207,7 +236,7 @@ public class BudgetItemActionFragment extends Fragment {
             Log.e(TAG, Mask.unmaskMoney(price.getText().toString()).toString());
             budgetItem.setQuantity(quantity);
             budgetItem.setEnvironment(environment.getText().toString());
-            budgetItem.setStatus(spinnerStatus.getSelectedItem().toString());
+            budgetItem.setStatus(status);
 
             return budgetItem;
         }

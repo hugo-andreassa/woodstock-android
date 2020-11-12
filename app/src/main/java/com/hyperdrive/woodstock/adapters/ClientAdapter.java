@@ -1,9 +1,6 @@
 package com.hyperdrive.woodstock.adapters;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +11,23 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
-import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.holders.ClientHolder;
 import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.ui.budget.BudgetActivity;
 import com.hyperdrive.woodstock.ui.client.ClientActionFragment;
-import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
 
     private static final String TAG = "CLIENT_ACTIVITY";
 
     private final List<ClientModel> mClients;
+    private final String mUserType;
 
-    public ClientAdapter(List<ClientModel> mClients) {
+    public ClientAdapter(List<ClientModel> mClients, String mUserType) {
         this.mClients = mClients;
+        this.mUserType = mUserType;
     }
 
     @NonNull
@@ -48,12 +40,15 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientHolder> {
     @Override
     public void onBindViewHolder(@NonNull ClientHolder holder, int position) {
         ClientModel client = mClients.get(position);
-        holder.title.setText(client.getName());
 
+        if(!mUserType.equals("ADMIN")) {
+            holder.moreButton.setVisibility(View.GONE);
+        }
+
+        holder.title.setText(client.getName());
         holder.budgetButton.setOnClickListener((v -> {
             callBudgetActivity(v, client);
         }));
-
         holder.moreButton.setOnClickListener((v -> {
             callFragment(v, client);
         }));

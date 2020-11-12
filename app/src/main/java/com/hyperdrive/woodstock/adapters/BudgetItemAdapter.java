@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,10 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.BudgetItemHolder;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
-import com.hyperdrive.woodstock.models.BudgetModel;
-import com.hyperdrive.woodstock.ui.budget.BudgetActionFragment;
 import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
-import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActivity;
 import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 import com.hyperdrive.woodstock.ui.project.ProjectActivity;
 
@@ -29,11 +25,13 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
     private static final String TAG = "BUDGET_ITEM_ACTIVITY";
 
     private final List<BudgetItemModel> mBudgetItems;
-    private final Long budgetId;
+    private final Long mBudgetId;
+    private final String mUserType;
 
-    public BudgetItemAdapter(List<BudgetItemModel> mBudgetItems, Long budgetId) {
+    public BudgetItemAdapter(List<BudgetItemModel> mBudgetItems, Long budgetId, String mUserType) {
         this.mBudgetItems = mBudgetItems;
-        this.budgetId = budgetId;
+        this.mBudgetId = budgetId;
+        this.mUserType = mUserType;
     }
 
     @NonNull
@@ -84,7 +82,8 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
     private void callFragment(View v, BudgetItemModel budgetItem) {
         AppCompatActivity activity = (AppCompatActivity) v.getContext();
 
-        BudgetItemActionFragment budgetItemActionFragment = BudgetItemActionFragment.newInstance(budgetId, budgetItem);
+        BudgetItemActionFragment budgetItemActionFragment =
+                BudgetItemActionFragment.newInstance(mBudgetId, budgetItem, mUserType);
 
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.budgetitem_fragment_layout, budgetItemActionFragment);

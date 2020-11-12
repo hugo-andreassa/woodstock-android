@@ -26,10 +26,12 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
 
     private final List<BudgetModel> mBudgets;
     private final Long clientId;
+    private final String mUserType;
 
-    public BudgetAdapter(List<BudgetModel> mBudgets, Long clientId) {
+    public BudgetAdapter(List<BudgetModel> mBudgets, Long clientId, String mUserType) {
         this.mBudgets = mBudgets;
         this.clientId = clientId;
+        this.mUserType = mUserType;
     }
 
     @NonNull
@@ -43,6 +45,10 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
     public void onBindViewHolder(@NonNull BudgetHolder holder, int position) {
         BudgetModel budget = mBudgets.get(position);
 
+        if(!mUserType.equals("ADMIN")) {
+            holder.moreButton.setVisibility(View.GONE);
+        }
+
         String number = String.format(
                 Locale.forLanguageTag("BR"),
                 "Orçamento %d",
@@ -55,7 +61,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetHolder> {
 
         String date = DateUtil.parseDateFromUtc(
                 budget.getCreationDate(),
-                "d MMMM");
+                "d MMMM, yyyy");
         holder.creationDate.setText( String.format(
                 Locale.forLanguageTag("BR"),
                 "Data de criação: %s",

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -26,11 +27,14 @@ import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MaterialActionFragment extends Fragment {
+public class MaterialActionFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private String TAG = "MATERIAL_ACTION_FRAG";
 
@@ -48,7 +52,7 @@ public class MaterialActionFragment extends Fragment {
 
     private TextInputEditText name;
     private TextInputEditText description;
-    private Spinner spinnerUnit;
+    private String unit;
     private Integer stock = 1;
     private Integer minimumStock = 1;
 
@@ -98,6 +102,37 @@ public class MaterialActionFragment extends Fragment {
         return view;
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        this.unit = parent.getItemAtPosition(pos).toString();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        return;
+    }
+
+    private void setupSpinnerDropDownUnit(View v) {
+        Spinner spinnerUnit = v.findViewById(R.id.material_unit);
+        spinnerUnit.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
+                R.array.material_unit_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerUnit.setAdapter(adapter);
+
+        if(mMaterial != null) {
+            List<String> list = Arrays.asList(
+                    v.getContext().getResources().getStringArray(R.array.material_unit_array));
+            for (int i=0; i<=list.size(); i++) {
+                String str = list.get(i);
+                if(str.substring(0, 2).trim().equals(mMaterial.getUnit())) {
+                    spinnerUnit.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
     private void setupDeleteButton(View view) {
         Button deleteButton = view.findViewById(R.id.material_delete_button);
         deleteButton.setVisibility(View.VISIBLE);
@@ -137,7 +172,7 @@ public class MaterialActionFragment extends Fragment {
             material.setLastUpdate(null);
             material.setStock(stock);
             material.setMinimumStock(minimumStock);
-            material.setUnit(spinnerUnit.getSelectedItem().toString().substring(0, 2));
+            material.setUnit(unit.substring(0, 2).trim());
 
             return material;
         }
@@ -171,16 +206,6 @@ public class MaterialActionFragment extends Fragment {
         description = v.findViewById(R.id.material_description);
     }
 
-    private void setupSpinnerDropDownUnit(View v) {
-        spinnerUnit = v.findViewById(R.id.material_unit);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(),
-                R.array.material_unit_array, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerUnit.setAdapter(adapter);
-    }
-
     private void setupIncrementButtons(View v) {
         Button incrementStock = v.findViewById(R.id.material_stock_more_button);
         Button decrementStock = v.findViewById(R.id.material_stock_less_button);
@@ -199,7 +224,7 @@ public class MaterialActionFragment extends Fragment {
         });
 
         decrementStock.setOnClickListener((view) -> {
-            if(stock > 1) {
+            if(stock > 0) {
                 stock = stock - 1;
                 displayStock(stock, v);
             }
@@ -215,7 +240,7 @@ public class MaterialActionFragment extends Fragment {
         });
 
         decrementMinimumStock.setOnClickListener((view) -> {
-            if(minimumStock > 1) {
+            if(minimumStock > 0) {
                 minimumStock = minimumStock - 1;
                 displayMinimumStock(minimumStock, v);
             }

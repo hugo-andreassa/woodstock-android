@@ -55,8 +55,8 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialHolder> {
 
         holder.name.setText(
                 String.format(Locale.getDefault(),
-                "Item %d - %s",
-                position+1, material.getName()
+                "%s",
+                material.getName()
         ));
 
         holder.quantity.setText(
