@@ -14,7 +14,7 @@ import com.hyperdrive.woodstock.R;
 public class BudgetItemHolder extends RecyclerView.ViewHolder {
 
     public TextView number;
-    public TextView environment;
+    public TextView value;
     public TextView status;
     public TextView description;
     public ImageButton moreButton;
@@ -25,7 +25,7 @@ public class BudgetItemHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         number = itemView.findViewById(R.id.budgetitem_list_number);
-        environment = itemView.findViewById(R.id.budgetitem_list_environment);
+        value = itemView.findViewById(R.id.budgetitem_list_value);
         status = itemView.findViewById(R.id.budgetitem_list_status);
         description = itemView.findViewById(R.id.budgetitem_list_description);
         moreButton = itemView.findViewById(R.id.budgetitem_list_more_button);

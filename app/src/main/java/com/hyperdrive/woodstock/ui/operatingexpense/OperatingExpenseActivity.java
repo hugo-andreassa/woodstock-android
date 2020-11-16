@@ -14,7 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.OperatingExpenseAdapter;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
 import com.hyperdrive.woodstock.viewmodel.OperatingExpenseViewModel;
 
 import java.util.ArrayList;

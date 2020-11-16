@@ -10,8 +10,13 @@
             android:title="@string/menu_home" />
 
         <item
-            android:id="@+id/nav_user_action"
+            android:id="@+id/nav_user_edit"
             android:icon="@drawable/ic_menu_user_action"
-            android:title="@string/menu_user_action" />
+            android:title="@string/menu_user_edit" />
+
+        <item
+            android:id="@+id/nav_user_logout"
+            android:icon="@drawable/ic_menu_logout"
+            android:title="@string/menu_user_logout" />
     </group>
 </menu>

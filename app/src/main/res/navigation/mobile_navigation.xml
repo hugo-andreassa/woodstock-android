@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_user_action"
-        android:name="com.hyperdrive.woodstock.ui.user.UserActionFragment"
-        android:label="@string/menu_user_action"
-        tools:layout="@layout/fragment_user_action" />
+        android:id="@+id/nav_user_edit"
+        android:name="com.hyperdrive.woodstock.ui.user.UserEditFragment"
+        android:label="@string/menu_user_edit"
+        tools:layout="@layout/fragment_user_edit" />
 
 </navigation>

@@ -19,7 +19,7 @@ import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.models.AddressModel;
 import com.hyperdrive.woodstock.models.ClientModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -42,7 +42,7 @@ public class ClientActionFragment extends Fragment {
 
     private ClientModel client;
     private ProgressDialog progressDialog;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
 
     private TextInputEditText name;
     private TextInputEditText cpfOrCpnj;
@@ -75,7 +75,7 @@ public class ClientActionFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_client_action, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 

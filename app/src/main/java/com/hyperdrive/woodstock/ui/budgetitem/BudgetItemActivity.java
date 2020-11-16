@@ -16,7 +16,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.BudgetItemAdapter;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
 import com.hyperdrive.woodstock.models.UserModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.viewmodel.BudgetItemViewModel;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class BudgetItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_budget_item);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Preferences sharedPreferences = new Preferences(getApplicationContext());
+        SharedPreferencesUtil sharedPreferences = new SharedPreferencesUtil(getApplicationContext());
         mUser = sharedPreferences.getUser();
 
         Bundle bundle = getIntent().getExtras();

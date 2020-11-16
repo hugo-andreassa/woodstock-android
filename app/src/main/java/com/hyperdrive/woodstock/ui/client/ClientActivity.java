@@ -17,7 +17,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.adapters.ClientAdapter;
 import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.models.UserModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.viewmodel.ClientViewModel;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_client);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Preferences sharedPreferences = new Preferences(getApplicationContext());
+        SharedPreferencesUtil sharedPreferences = new SharedPreferencesUtil(getApplicationContext());
         mUser = sharedPreferences.getUser();
 
         Bundle bundle = getIntent().getExtras();

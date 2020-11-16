@@ -9,6 +9,12 @@
     android:orientation="vertical"
     tools:context=".ui.login.LoginActivity">
 
+    <FrameLayout
+        android:id="@+id/new_user_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"/>
+
     <ImageView
         android:id="@+id/login_logo"
         android:src="@drawable/ic_woodstock"
@@ -79,9 +85,23 @@
         android:text="Entrar"
         style="@style/CustomButton"
         android:shadowRadius="10"
+        android:layout_above="@id/login_registrar"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/login_registrar"
+        android:text="Realizar cadastro"
+        android:textSize="15sp"
+        android:textColor="#fff"
+        android:drawableRight="@drawable/ic_menu_user_action"
+        android:drawablePadding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="60dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"/>
-
 </RelativeLayout>

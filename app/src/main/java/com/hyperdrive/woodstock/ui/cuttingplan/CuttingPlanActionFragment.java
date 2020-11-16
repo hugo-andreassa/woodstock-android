@@ -19,7 +19,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.CuttingPlanService;
 import com.hyperdrive.woodstock.models.CuttingPlanModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.util.Locale;
@@ -44,7 +44,7 @@ public class CuttingPlanActionFragment extends Fragment {
 
     private Long mBudgetItemId;
     private CuttingPlanModel mCuttingPlan;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
     private ProgressDialog progressDialog;
 
     private TextInputEditText height;
@@ -79,7 +79,7 @@ public class CuttingPlanActionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cutting_plan_action, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 

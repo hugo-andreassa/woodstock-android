@@ -20,11 +20,9 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.CuttingPlanService;
 import com.hyperdrive.woodstock.api.services.MaterialService;
 import com.hyperdrive.woodstock.models.MaterialModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.util.Arrays;
@@ -56,7 +54,7 @@ public class MaterialActionFragment extends Fragment implements AdapterView.OnIt
     private Integer stock = 1;
     private Integer minimumStock = 1;
 
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
     private ProgressDialog progressDialog;
 
     public MaterialActionFragment() {
@@ -86,7 +84,7 @@ public class MaterialActionFragment extends Fragment implements AdapterView.OnIt
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_material_action, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 

@@ -14,6 +14,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/budgetitem_description_container"
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 android:src="@drawable/ic_description"
@@ -42,6 +43,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/budgetitem_price_container"
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 android:src="@drawable/ic_money"
@@ -87,6 +89,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/budgetitem_environment_container"
             style="@style/CustomLinearLayout.Form">
             <ImageView
                 style="@style/CustomImageView.Form"/>

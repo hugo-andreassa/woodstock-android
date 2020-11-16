@@ -1,29 +1,26 @@
 package com.hyperdrive.woodstock.ui.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.hyperdrive.woodstock.MainActivity;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.ClientService;
 import com.hyperdrive.woodstock.api.services.LoginService;
 import com.hyperdrive.woodstock.api.services.UserService;
-import com.hyperdrive.woodstock.models.ClientModel;
 import com.hyperdrive.woodstock.models.LoginModel;
 import com.hyperdrive.woodstock.models.UserModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.client.ClientActivity;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
+import com.hyperdrive.woodstock.ui.user.UserNewFragment;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
             "Certifique-se de ter digitado os dados corretamente";
 
     ProgressDialog progressDialog;
-    Preferences sharedPreferences;
+    SharedPreferencesUtil sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +43,32 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         setupLoginButton();
+        setupRegistrar();
+    }
+
+    private void setupRegistrar() {
+        TextView textView = findViewById(R.id.login_registrar);
+        textView.setOnClickListener(v -> {
+            callNewUserFragment();
+        });
     }
 
     private void setupLoginButton() {
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Carregando....");
 
-        sharedPreferences = new Preferences(LoginActivity.this);
+        sharedPreferences = new SharedPreferencesUtil(LoginActivity.this);
 
         Button button = findViewById(R.id.login_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // LoginModel loginModel = getLoginModel();
-                LoginModel loginModel = new LoginModel("wesley@gmail.com", "123456");
+        button.setOnClickListener(v -> {
+            // LoginModel loginModel = getLoginModel();
+            LoginModel loginModel = new LoginModel("hugo.andreassa@gmail.com", "hugo@hugo");
 
-                if(loginModel != null) {
-                    progressDialog.show();
-                    getLoginFromApi(loginModel);
-                } else {
-                    SnackbarUtil.showError(LoginActivity.this, "Preencha todos os campos!");
-                }
+            if(loginModel != null) {
+                progressDialog.show();
+                getLoginFromApi(loginModel);
+            } else {
+                SnackbarUtil.showError(LoginActivity.this, "Preencha todos os campos!");
             }
         });
     }
@@ -100,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     sharedPreferences.setAuthentication(auth);
                     getUserDataFromApi(login, auth);
-
                 } else {
                     progressDialog.dismiss();
                     SnackbarUtil.showError(LoginActivity.this, BAD_REQUEST_ERROR);
@@ -121,15 +122,19 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                progressDialog.dismiss();
                 if(response.isSuccessful()) {
-                    progressDialog.dismiss();
                     UserModel user = response.body();
 
-                    sharedPreferences.setUser(user);
+                    if(user.getStatus().equals("DESATIVADO")) {
+                        SnackbarUtil.showError(LoginActivity.this, "Este usuário " +
+                                "está desativado. Entre em contato com um administrador");
+                        return;
+                    }
 
+                    sharedPreferences.setUser(user);
                     callHomeActivity();
                 } else {
-                    progressDialog.dismiss();
                     SnackbarUtil.showError(LoginActivity.this, SERVER_ERROR);
                 }
             }
@@ -147,5 +152,14 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void callNewUserFragment() {
+        UserNewFragment userNewFragment = new UserNewFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.new_user_fragment_layout, userNewFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

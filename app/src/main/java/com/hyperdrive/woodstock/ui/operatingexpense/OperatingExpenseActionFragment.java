@@ -11,16 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.OperatingExpenseService;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -45,7 +43,7 @@ public class OperatingExpenseActionFragment extends Fragment {
 
     private Long mCompanyId;
     private OperatingExpenseModel mOperatingExpense;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
     private ProgressDialog progressDialog;
 
     private TextInputEditText name;
@@ -79,7 +77,7 @@ public class OperatingExpenseActionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_operating_expense, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 

@@ -28,7 +28,7 @@ import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.BudgetService;
 import com.hyperdrive.woodstock.models.AddressModel;
 import com.hyperdrive.woodstock.models.BudgetModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.DateUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
@@ -76,7 +76,7 @@ public class BudgetActionFragment extends Fragment implements AdapterView.OnItem
     private TextInputEditText comp;
 
     private ProgressDialog progressDialog;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
     private DatePickerDialog datepicker;
 
     public BudgetActionFragment() {
@@ -108,7 +108,7 @@ public class BudgetActionFragment extends Fragment implements AdapterView.OnItem
 
         progressDialog = new ProgressDialog(v.getContext());
         progressDialog.setMessage("Carregando....");
-        sharedPreferences = new Preferences(v.getContext());
+        sharedPreferences = new SharedPreferencesUtil(v.getContext());
 
         setupSpinnerDropdownStatus(v);
         setupSpinnerDropdownEstados(v);

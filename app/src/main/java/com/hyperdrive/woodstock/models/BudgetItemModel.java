@@ -82,4 +82,17 @@ public class BudgetItemModel implements Serializable {
     public void setBudgetId(Long budgetId) {
         this.budgetId = budgetId;
     }
+
+    @Override
+    public String toString() {
+        return "BudgetItemModel{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", environment='" + environment + '\'' +
+                ", status='" + status + '\'' +
+                ", budgetId=" + budgetId +
+                '}';
+    }
 }

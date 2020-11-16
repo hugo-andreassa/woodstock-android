@@ -14,7 +14,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.UserService;
 import com.hyperdrive.woodstock.models.UserModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -22,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserActionFragment extends Fragment {
+public class UserEditFragment extends Fragment {
 
     private String TAG = "USER_ACTION_FRAGMENT";
 
@@ -33,22 +33,22 @@ public class UserActionFragment extends Fragment {
     private TextInputEditText phone;
     private TextInputEditText password;
 
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
 
-    public UserActionFragment() {
+    public UserEditFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         this.mUser = sharedPreferences.getUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_user_action, container, false);
+       View view = inflater.inflate(R.layout.fragment_user_edit, container, false);
 
        setupEditTexts(view);
        setupSaveButton(view);

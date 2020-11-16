@@ -28,6 +28,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/budget_total"
                     android:hint="Total"
+                    android:enabled="false"
                     android:focusable="false"
                     android:clickable="false"
                     android:layout_width="match_parent"

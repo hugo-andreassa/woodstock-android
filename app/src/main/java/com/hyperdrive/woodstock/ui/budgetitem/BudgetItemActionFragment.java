@@ -22,7 +22,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.BudgetItemService;
 import com.hyperdrive.woodstock.models.BudgetItemModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -61,7 +61,7 @@ public class BudgetItemActionFragment extends Fragment implements AdapterView.On
     private Integer quantity = 1;
 
     private ProgressDialog progressDialog;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
 
     public BudgetItemActionFragment() {
 
@@ -94,7 +94,7 @@ public class BudgetItemActionFragment extends Fragment implements AdapterView.On
 
         View view = inflater.inflate(R.layout.fragment_budget_item_action, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 
@@ -146,6 +146,16 @@ public class BudgetItemActionFragment extends Fragment implements AdapterView.On
         price = v.findViewById(R.id.budgetitem_price);
         price.addTextChangedListener(Mask.moneyMask(price));
         environment = v.findViewById(R.id.budgetitem_environment);
+
+        if(!mUserType.equals("ADMIN")) {
+            View viewDescription = v.findViewById(R.id.budgetitem_description_container);
+            View viewPrice = v.findViewById(R.id.budgetitem_price_container);
+            View viewEnvironment = v.findViewById(R.id.budgetitem_environment_container);
+
+            viewDescription.setVisibility(View.GONE);
+            viewPrice.setVisibility(View.GONE);
+            viewEnvironment.setVisibility(View.GONE);
+        }
     }
 
     private void setupIncrementButtons(View v) {
@@ -174,7 +184,11 @@ public class BudgetItemActionFragment extends Fragment implements AdapterView.On
 
     private void setupDeleteButton(View v) {
         Button button = v.findViewById(R.id.budgetitem_delete_button);
-        button.setVisibility(View.VISIBLE);
+
+        if(mUserType.equals("ADMIN")) {
+            button.setVisibility(View.VISIBLE);
+        }
+
         button.setOnClickListener(view -> {
             deleteBudgetItem(v);
         });

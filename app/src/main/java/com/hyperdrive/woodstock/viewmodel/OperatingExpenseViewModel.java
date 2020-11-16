@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.OperatingExpenseService;
 import com.hyperdrive.woodstock.models.OperatingExpenseModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
 
 import java.util.List;
 

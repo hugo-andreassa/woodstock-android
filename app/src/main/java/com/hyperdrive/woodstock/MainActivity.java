@@ -1,15 +1,15 @@
 package com.hyperdrive.woodstock;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.hyperdrive.woodstock.models.UserModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
+import com.hyperdrive.woodstock.ui.login.LoginActivity;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.getMenu().findItem(R.id.nav_user_logout).setOnMenuItemClickListener(menuItem -> {
+            logout();
+            return true;
+        });
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home)
@@ -43,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         loadNavHeaderInfo();
+    }
+
+    private void logout() {
+        SharedPreferencesUtil sharedPreferences =
+                new SharedPreferencesUtil(getApplicationContext());
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+
+        sharedPreferences.clearSharedPreferences();
+        finish();
     }
 
     @Override
@@ -60,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNavHeaderInfo() {
-        Preferences sharedPreferences = new Preferences(getApplicationContext());
+        SharedPreferencesUtil sharedPreferences = new SharedPreferencesUtil(getApplicationContext());
         UserModel user = sharedPreferences.getUser();
 
         NavigationView navigationView = findViewById(R.id.nav_view);

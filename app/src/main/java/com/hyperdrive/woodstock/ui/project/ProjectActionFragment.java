@@ -20,18 +20,15 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
-import androidx.core.os.BuildCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hyperdrive.woodstock.BuildConfig;
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
-import com.hyperdrive.woodstock.api.services.CuttingPlanService;
 import com.hyperdrive.woodstock.api.services.ProjectService;
 import com.hyperdrive.woodstock.models.ProjectModel;
-import com.hyperdrive.woodstock.persistence.Preferences;
-import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.utils.LoadImage;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
@@ -75,7 +72,7 @@ public class ProjectActionFragment extends Fragment {
     private TextInputEditText comment;
 
     private ProgressDialog progressDialog;
-    private Preferences sharedPreferences;
+    private SharedPreferencesUtil sharedPreferences;
 
     public ProjectActionFragment() {
 
@@ -104,7 +101,7 @@ public class ProjectActionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_action, container, false);
 
-        sharedPreferences = new Preferences(getContext());
+        sharedPreferences = new SharedPreferencesUtil(getContext());
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Carregando...");
 

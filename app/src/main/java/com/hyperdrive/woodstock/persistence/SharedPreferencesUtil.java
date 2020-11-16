@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.hyperdrive.woodstock.models.UserModel;
 
-public class Preferences {
+public class SharedPreferencesUtil {
 
     private final String PREFERENCES_FILE = "PreferencesFile";
     private SharedPreferences sharedPreferences;
 
-    public Preferences(Context context) {
+    public SharedPreferencesUtil(Context context) {
         sharedPreferences = context.getSharedPreferences(PREFERENCES_FILE, 0);
     }
 
@@ -41,5 +41,9 @@ public class Preferences {
         UserModel obj = gson.fromJson(json, UserModel.class);
 
         return obj;
+    }
+
+    public void clearSharedPreferences() {
+        sharedPreferences.edit().clear().apply();
     }
 }
