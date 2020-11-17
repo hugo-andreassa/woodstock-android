@@ -97,11 +97,23 @@
         android:textColor="#fff"
         android:drawableRight="@drawable/ic_menu_user_action"
         android:drawablePadding="10dp"
+        android:layout_above="@id/login_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/login_information"
+        android:textAlignment="center"
+        android:text="Após realizar o cadastro sua conta precisará ser ativada por um administrador, até lá sua conta ficará desativada."
+        android:textSize="13sp"
+        android:textColor="#fff"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"/>
 </RelativeLayout>

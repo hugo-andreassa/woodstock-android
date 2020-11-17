@@ -31,6 +31,10 @@
         </provider>
 
         <activity
+            android:name=".ui.user.UserActivity"
+            android:label="Usuários"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".ui.material.MaterialActivity"
             android:label="Estoque"
             android:parentActivityName=".MainActivity" />

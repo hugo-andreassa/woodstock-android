@@ -9,7 +9,7 @@
     <string name="menu_estoque">Estoque</string>
     <string name="menu_solicitacoes">Solicitações de Compra</string>
     <string name="menu_despesas">Despesas</string>
-    <string name="menu_user_edit">Editar seus dados de Usuário</string>
+    <string name="menu_user_edit">Usuário</string>
     <string name="menu_user_logout">Sair</string>
 
     // Client Form
@@ -74,5 +74,6 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_users">Usuários</string>
 
 </resources>

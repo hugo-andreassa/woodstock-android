@@ -17,6 +17,7 @@ import com.hyperdrive.woodstock.ui.budgetitem.BudgetItemActionFragment;
 import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActivity;
 import com.hyperdrive.woodstock.ui.project.ProjectActivity;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +56,10 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemHolder> {
                 position + 1);
         holder.number.setText(number);
 
-        holder.value.setText(String.format(
-                Locale.getDefault(),
-                "R$ %.2f",
-                budgetItem.getPrice()));
+        holder.value.setText(
+                NumberFormat.getCurrencyInstance(
+                        Locale.getDefault())
+                        .format(budgetItem.getPrice()));
 
         String status = budgetItem.getStatus().substring(0, 1).toUpperCase(Locale.forLanguageTag("BR"))
                 + budgetItem.getStatus().substring(1).toLowerCase(Locale.forLanguageTag("BR"));

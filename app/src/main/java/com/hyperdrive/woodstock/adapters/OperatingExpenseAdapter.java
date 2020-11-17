@@ -19,6 +19,7 @@ import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActionFragme
 import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActivity;
 import com.hyperdrive.woodstock.utils.DateUtil;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,10 +53,9 @@ public class OperatingExpenseAdapter extends RecyclerView.Adapter<OperatingExpen
                 "d MMMM, yyyy HH:mm:ss");
         holder.creationDate.setText(date);
 
-        holder.value.setText(String.format(
-                Locale.getDefault(),
-                "R$ %.2f",
-                operatingExpense.getValue()));
+        holder.value.setText(NumberFormat.getCurrencyInstance(
+                Locale.getDefault())
+                .format(operatingExpense.getValue()));
 
         holder.moreButton.setOnClickListener((v) -> {
            callFragment(v, operatingExpense);

@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hyperdrive.woodstock.R;
+import com.hyperdrive.woodstock.models.UserModel;
+import com.hyperdrive.woodstock.persistence.SharedPreferencesUtil;
 import com.hyperdrive.woodstock.ui.client.ClientActivity;
 import com.hyperdrive.woodstock.ui.material.MaterialActivity;
 import com.hyperdrive.woodstock.ui.operatingexpense.OperatingExpenseActivity;
+import com.hyperdrive.woodstock.ui.user.UserActivity;
 
 import java.util.Objects;
 
@@ -33,10 +36,28 @@ public class HomeFragment extends Fragment {
 
         setupClienteMenuButton(view);
         setupEstoqueMenuButton(view);
-        setupSolicitacoesMenuButton(view);
         setupDespesaMenuButton(view);
+        setupUserMenuButton(view);
 
         return view;
+    }
+
+    private void setupUserMenuButton(View view) {
+        Button button = view.findViewById(R.id.menu_users);
+
+        SharedPreferencesUtil sharedPreferences = new SharedPreferencesUtil(getContext());
+        UserModel user = sharedPreferences.getUser();
+
+        if(user.getType().equals("ADMIN")) {
+            button.setVisibility(View.VISIBLE);
+        }
+
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeFragment.this.requireActivity().getApplication(),
+                    UserActivity.class);
+            intent.putExtra("companyId", 1L);
+            startActivity(intent);
+        });
     }
 
     private void setupDespesaMenuButton(View view) {
@@ -47,9 +68,6 @@ public class HomeFragment extends Fragment {
             intent.putExtra("companyId", 1L);
             startActivity(intent);
         });
-    }
-
-    private void setupSolicitacoesMenuButton(View view) {
     }
 
     private void setupEstoqueMenuButton(View view) {

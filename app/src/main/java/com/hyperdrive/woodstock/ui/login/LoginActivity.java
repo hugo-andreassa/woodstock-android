@@ -129,11 +129,10 @@ public class LoginActivity extends AppCompatActivity {
                     if(user.getStatus().equals("DESATIVADO")) {
                         SnackbarUtil.showError(LoginActivity.this, "Este usuário " +
                                 "está desativado. Entre em contato com um administrador");
-                        return;
+                    } else {
+                        sharedPreferences.setUser(user);
+                        callHomeActivity();
                     }
-
-                    sharedPreferences.setUser(user);
-                    callHomeActivity();
                 } else {
                     SnackbarUtil.showError(LoginActivity.this, SERVER_ERROR);
                 }

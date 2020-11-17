@@ -34,4 +34,11 @@
         android:text="@string/menu_despesas"
         style="@style/CustomButton.Home"
         android:drawableStart="@drawable/ic_menu_despesas"/>
+
+    <Button
+        android:id="@+id/menu_users"
+        android:text="@string/menu_users"
+        android:visibility="gone"
+        style="@style/CustomButton.Home"
+        android:drawableStart="@drawable/ic_menu_user_action"/>
 </LinearLayout>
