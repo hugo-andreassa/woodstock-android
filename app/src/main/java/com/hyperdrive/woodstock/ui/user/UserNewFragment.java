@@ -16,6 +16,7 @@ import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.api.config.RetrofitConfig;
 import com.hyperdrive.woodstock.api.services.UserService;
 import com.hyperdrive.woodstock.models.UserModel;
+import com.hyperdrive.woodstock.utils.Mask;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import retrofit2.Call;
@@ -61,6 +62,7 @@ public class UserNewFragment extends Fragment {
         name = view.findViewById(R.id.user_name);
         email = view.findViewById(R.id.user_email);
         phone = view.findViewById(R.id.user_phone);
+        phone.addTextChangedListener(Mask.mask(phone, Mask.PHONE));
         password = view.findViewById(R.id.user_password);
         confirmPassword = view.findViewById(R.id.user_password_confirm);
     }

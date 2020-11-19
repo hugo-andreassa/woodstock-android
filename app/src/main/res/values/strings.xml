@@ -72,8 +72,19 @@
         <item>SC (Sacos)</item>
         <item>L (Litros)</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="menu_users">Usuários</string>
+    <string name="atualizar">Atualizar</string>
+
+    <string-array name="user_status_array">
+        <item>ATIVADO</item>
+        <item>DESATIVADO</item>
+    </string-array>
+
+    <string-array name="user_type_array">
+        <item>ADMIN</item>
+        <item>MARCENEIRO</item>
+        <item>ESTOQUISTA</item>
+    </string-array>
 
 </resources>

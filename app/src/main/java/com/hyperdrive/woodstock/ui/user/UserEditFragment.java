@@ -1,5 +1,6 @@
 package com.hyperdrive.woodstock.ui.user;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,14 +26,17 @@ import retrofit2.Response;
 public class UserEditFragment extends Fragment {
 
     private String TAG = "USER_ACTION_FRAGMENT";
+    private final String SERVER_ERROR = "Erro na comunicação com o servidor";
+    private final String BAD_REQUEST_INSERT = "Erro ao atualizar o Usuário.";
+    private final String OK_REQUEST_INSERT = "Usuário atualizado com sucesso";
 
     private UserModel mUser;
-    private Long companyId;
 
     private TextInputEditText name;
     private TextInputEditText phone;
     private TextInputEditText password;
 
+    private ProgressDialog progressDialog;
     private SharedPreferencesUtil sharedPreferences;
 
     public UserEditFragment() {
@@ -41,20 +45,23 @@ public class UserEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = new SharedPreferencesUtil(getContext());
-        this.mUser = sharedPreferences.getUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_user_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_edit, container, false);
 
-       setupEditTexts(view);
-       setupSaveButton(view);
-       loadFieldsInformation(view);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Carregando");
+        sharedPreferences = new SharedPreferencesUtil(getContext());
 
-       return view;
+        mUser = sharedPreferences.getUser();
+        setupEditTexts(view);
+        setupSaveButton(view);
+        loadFieldsInformation(view);
+
+        return view;
     }
 
     private void setupEditTexts(View view) {
@@ -103,6 +110,14 @@ public class UserEditFragment extends Fragment {
 
             return false;
         }
+
+        String passwd1 = password.getText().toString();
+        if(passwd1.length() < 6) {
+            password.setError("A senha deve ter mais do que 6 caracteres");
+
+            return false;
+        }
+
         return true;
     }
 
@@ -111,29 +126,31 @@ public class UserEditFragment extends Fragment {
 
         button.setOnClickListener((v) -> {
             UserModel user = getValuesFromFields();
+            if(user == null) {
+                return;
+            }
 
-            if(user != null) {
-                if(mUser != null) {
-                    updateUserInApi(user, view);
-                } else {
-
-                }
+            if(mUser != null) {
+                updateUserInApi(user);
             }
         });
     }
 
-    private void updateUserInApi(UserModel user, View view) {
+    private void updateUserInApi(UserModel user) {
         String auth = sharedPreferences.getAuthentication();
+
+        progressDialog.show();
 
         UserService userService = RetrofitConfig.getRetrofitInstance().create(UserService.class);
         Call<Void> call = userService.update(user.getId(), user, auth);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    SnackbarUtil.showSuccess(getActivity(), "Usuário atualizado com sucesso");
+                    SnackbarUtil.showSuccess(getActivity(), OK_REQUEST_INSERT);
                 } else {
-                    SnackbarUtil.showError(getActivity(), "Erro ao atualizar Usuário");
+                    SnackbarUtil.showError(getActivity(), BAD_REQUEST_INSERT);
                     Log.e(TAG, response.toString());
                     Log.e(TAG, user.toString());
                 }
@@ -141,7 +158,8 @@ public class UserEditFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                SnackbarUtil.showError(getActivity(), "Erro na conexão com o servidor");
+                progressDialog.dismiss();
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
                 Log.e(TAG, t.getMessage());
             }
         });

@@ -1,6 +1,9 @@
 package com.hyperdrive.woodstock.api.services;
 
+import com.hyperdrive.woodstock.models.ProjectModel;
 import com.hyperdrive.woodstock.models.UserModel;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,6 +15,10 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
+    @GET("users/")
+    Call<List<UserModel>> findAll(
+            @Query("company") Long company,
+            @Header("Authorization") String auth);
 
     @POST("users")
     Call<Void> insert(
