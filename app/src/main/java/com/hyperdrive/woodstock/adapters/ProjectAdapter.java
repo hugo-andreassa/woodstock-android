@@ -1,14 +1,8 @@
 package com.hyperdrive.woodstock.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,14 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperdrive.woodstock.R;
 import com.hyperdrive.woodstock.holders.ProjectHolder;
-import com.hyperdrive.woodstock.models.CuttingPlanModel;
 import com.hyperdrive.woodstock.models.ProjectModel;
-import com.hyperdrive.woodstock.ui.cuttingplan.CuttingPlanActionFragment;
 import com.hyperdrive.woodstock.ui.project.ProjectActionFragment;
 import com.hyperdrive.woodstock.utils.LoadImage;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,7 +41,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectHolder> {
     public void onBindViewHolder(@NonNull ProjectHolder holder, int position) {
         ProjectModel project = mProjects.get(position);
 
-        LoadImage loadImage = new LoadImage(holder.image);
+        LoadImage loadImage = new LoadImage(holder.image, null);
         loadImage.execute(project.getUrl());
 
         holder.tittle.setText(

@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,6 +35,8 @@ import com.hyperdrive.woodstock.utils.LoadImage;
 import com.hyperdrive.woodstock.utils.SnackbarUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,7 +69,7 @@ public class ProjectActionFragment extends Fragment {
 
     /* PHOTO FILE VARIABLES */
     private String mCurrentPhotoPath;
-    private Uri photoURI;
+    private Uri mPhotoURI;
 
     private ImageView image;
     private ImageButton cameraButton;
@@ -126,8 +130,14 @@ public class ProjectActionFragment extends Fragment {
 
     private void loadFieldsInformation(View view) {
         comment.setText(mProject.getComment());
-        LoadImage loadImage = new LoadImage(image);
+        LoadImage loadImage = new LoadImage(image, getContext());
         loadImage.execute(mProject.getUrl());
+        image.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(image.getTag().toString()), "image/*");
+            startActivity(intent);
+        });
     }
 
     private void setupSaveButton(View view) {
@@ -221,7 +231,7 @@ public class ProjectActionFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 progressDialog.dismiss();
                 if(response.isSuccessful()) {
-                    if(photoURI != null) {
+                    if(mPhotoURI != null) {
                         uploadFile(project.getId(), auth, OK_REQUEST_UPDATE);
                     } else {
                         ProjectActivity.updateRecyclerView();
@@ -246,11 +256,12 @@ public class ProjectActionFragment extends Fragment {
         Log.e("Upload", "ok");
         Log.e("Upload", mCurrentPhotoPath);
         File file = new File(mCurrentPhotoPath);
+        file = saveBitmapToFile(file);
 
         RequestBody requestFile =
                 RequestBody.create(
                         MediaType.parse(
-                                getActivity().getContentResolver().getType(photoURI)),
+                                getActivity().getContentResolver().getType(mPhotoURI)),
                                 file);
 
         MultipartBody.Part body =
@@ -268,6 +279,7 @@ public class ProjectActionFragment extends Fragment {
                     ProjectActivity.updateRecyclerView();
                     SnackbarUtil.showSuccess(getActivity(), msg);
                 } else {
+                    SnackbarUtil.showError(getActivity(), "Erro ao fazer upload da foto para os servidor");
                     Log.e("Upload", response.toString());
                 }
             }
@@ -275,6 +287,8 @@ public class ProjectActionFragment extends Fragment {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 progressDialog.dismiss();
+
+                SnackbarUtil.showError(getActivity(), SERVER_ERROR);
                 Log.e("Upload", t.getMessage());
             }
         });
@@ -329,7 +343,7 @@ public class ProjectActionFragment extends Fragment {
 
         cameraButton.setOnClickListener((v) -> {
             callTakePictureIntent();
-            Log.e(TAG, photoURI.getPath());
+            Log.e(TAG, mPhotoURI.getPath());
         });
     }
 
@@ -346,11 +360,11 @@ public class ProjectActionFragment extends Fragment {
             }
 
             if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(getContext(),
+                mPhotoURI = FileProvider.getUriForFile(getContext(),
                         BuildConfig.APPLICATION_ID +".provider",
                         photoFile);
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -377,13 +391,81 @@ public class ProjectActionFragment extends Fragment {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK)
         {
-            Bitmap photo = null;
+            rotateImage(mCurrentPhotoPath);
+
             try {
-                photo = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoURI);
+                Bitmap photo = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mPhotoURI);
+                image.setImageBitmap(photo);
+                image.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(mCurrentPhotoPath), "image/*");
+                    startActivity(intent);
+                });
             } catch (IOException e) {
                 Log.e(TAG, "Erro ao exibir a foto");
+                Log.e(TAG, e.getMessage());
             }
-            image.setImageBitmap(photo);
+        }
+    }
+
+    public File saveBitmapToFile(File file){
+        try {
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+
+            FileInputStream inputStream = new FileInputStream(file);
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=75;
+
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = new FileInputStream(file);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
+
+            return file;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void rotateImage(String path) {
+
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            exifInterface.setAttribute(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_ROTATE_180 + "");
+            Log.e(TAG, "RODOU");
+        }
+
+        try {
+            exifInterface.saveAttributes();
+        } catch (IOException e) {
+            Log.e(TAG, "Erro ao salvar Exif");
+            e.printStackTrace();
         }
     }
 }

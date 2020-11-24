@@ -62,8 +62,8 @@ public class LoginActivity extends AppCompatActivity {
         Button button = findViewById(R.id.login_button);
         button.setOnClickListener(v -> {
             // LoginModel loginModel = getLoginModel();
-            // LoginModel loginModel = new LoginModel("hugo.andreassa@gmail.com", "hugo@hugo");
-            LoginModel loginModel = new LoginModel("edsonsantos@gmail.com", "123456");
+            LoginModel loginModel = new LoginModel("hugo.andreassa@gmail.com", "hugo@hugo");
+            // LoginModel loginModel = new LoginModel("edsonsantos@gmail.com", "123456");
 
             if(loginModel != null) {
                 progressDialog.show();
